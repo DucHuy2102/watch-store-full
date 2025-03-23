@@ -3,8 +3,28 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 
-export default function LogoApp() {
+const logoTextVariants = cva('tracking-wider text-2xl font-bold flex items-center', {
+    variants: {
+        variant: {
+            default: 'text-slate-600 hover:text-slate-800 dark:text-slate-100',
+            light: 'text-white hover:text-gray-200',
+            dark: 'text-gray-800 hover:text-black dark:text-white',
+            primary: 'text-yellow-500 hover:text-yellow-600 dark:text-yellow-400',
+        },
+    },
+    defaultVariants: {
+        variant: 'default',
+    },
+});
+
+interface LogoAppProps extends VariantProps<typeof logoTextVariants> {
+    className?: string;
+}
+
+export default function LogoApp({ variant, className }: LogoAppProps) {
     return (
         <Link href='/'>
             <motion.div
@@ -14,7 +34,7 @@ export default function LogoApp() {
                 transition={{ duration: 0.6, ease: 'easeOut' }}
                 whileHover='hover'
             >
-                <motion.h1 className='tracking-wider text-2xl font-bold text-slate-600 hover:text-slate-800 dark:text-slate-100 flex items-center'>
+                <motion.h1 className={cn(logoTextVariants({ variant, className }))}>
                     <span>
                         Watch
                         <motion.span

@@ -124,3 +124,12 @@
         @apply bg-background text-foreground;
     }
 }
+
+@layer utilities {
+    .bg-sign-in {
+        background-image: url('/login.jpg');
+    }
+    .bg-sign-up {
+        background-image: url('/register.webp');
+    }
+}

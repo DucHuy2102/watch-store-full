@@ -6,12 +6,13 @@ const FACEBOOK_LINK = process.env.NEXT_PUBLIC_FACEBOOK_LINK;
 
 export default function Footer() {
     return (
-        <footer className='px-20 py-2 border-t border-zinc-200 dark:border-zinc-700 shadow-sm mt-auto flex items-center justify-between'>
+        <footer className='px-10 py-2 md:px-20 border-t border-zinc-200 dark:border-zinc-700 shadow-sm mt-auto flex items-center justify-between'>
             <Link
                 href={'/'}
                 className='tracking-wider font-medium text-zinc-700 dark:text-zinc-400'
             >
-                © 2025 <span className='dark:text-green-400'>WatchStore</span>. All rights reserved.
+                © 2025 <span className='text-emerald-500 hover:underline'>WatchStore</span>. All
+                rights reserved.
             </Link>
             <div className='flex items-center gap-5'>
                 <span className='rounded-xl p-2 bg-zinc-100 hover:bg-zinc-200 dark:bg-transparent dark:hover:bg-transparent transition-colors duration-200'>
