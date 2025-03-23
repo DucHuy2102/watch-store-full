@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { FaCloudSun, FaCloudMoon } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
-export function ToggleTheme() {
+export default function ToggleTheme() {
     const { theme, setTheme } = useTheme();
 
     return (
