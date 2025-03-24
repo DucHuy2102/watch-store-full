@@ -21,10 +21,12 @@ export default function Story() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3, duration: 0.8 }}
-                    className='text-center text-8xl font-semibold tracking-tight bg-clip-text text-transparent 
+                    className='text-center text-8xl font-semibold tracking-tighter bg-clip-text text-transparent 
                     bg-gradient-to-r from-zinc-900 to-zinc-500 dark:from-zinc-100 dark:to-zinc-400 mb-8'
                 >
-                    Every watch has a soul and a story to be told.
+                    Every watch has a{' '}
+                    <span className='text-amber-500 dark:text-orange-400'>soul</span> and a{' '}
+                    <span className='text-blue-500 dark:text-emerald-400'>story</span> to be told.
                 </motion.h1>
 
                 <motion.div

@@ -74,7 +74,6 @@ export default function Carousel_Section() {
                                 className='object-cover transition-transform duration-700 hover:scale-105'
                                 sizes='100vw'
                             />
-                            {/* Gradient overlay */}
                             <div className='absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/70' />
 
                             <div
@@ -92,15 +91,15 @@ export default function Carousel_Section() {
                                     {item.description}
                                 </p>
                                 <p className='text-4xl font-light mb-8'>{item.price}</p>
-                                <Link href='/products' className='w-fit'>
+                                <Link href='/products'>
                                     <Button
-                                        className='bg-white text-black hover:bg-white/90
-                                        hover:scale-105 transition-all duration-300
-                                        flex items-center gap-3 text-lg px-8 py-6 rounded-full
+                                        className='w-full text-white bg-transparent border border-white
+                                        hover:bg-white hover:text-black transition-all duration-300 font-sans
+                                        flex items-center gap-2 text-lg px-8 py-6 rounded-full
                                         group shadow-lg hover:shadow-xl cursor-pointer'
                                     >
                                         Discover Now
-                                        <ArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform' />
+                                        <ArrowRight className='w-6 h-6 group-hover:translate-x-1 transition-transform' />
                                     </Button>
                                 </Link>
                             </div>

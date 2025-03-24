@@ -13,9 +13,9 @@ export default function Navbar() {
             <div className='flex items-center gap-3'>
                 <ToggleTheme />
                 <Link href={'/auth/login'}>
-                    <Button>Sign In</Button>
+                    <Button className='cursor-pointer'>Sign In</Button>
                 </Link>
-                <Button variant={'ghost'} className='border'>
+                <Button variant={'ghost'} className='border cursor-pointer'>
                     <AiFillLike className='text-zinc-500 dark:text-zinc-300' />
                 </Button>
             </div>

@@ -11,7 +11,7 @@ export default function ToggleTheme() {
     return (
         <Button
             variant='ghost'
-            className='border group flex items-center gap-2 rounded-lg group'
+            className='border group flex items-center gap-2 rounded-lg group cursor-pointer'
             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
         >
             <motion.div
