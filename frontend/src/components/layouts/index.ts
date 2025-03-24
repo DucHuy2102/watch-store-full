@@ -6,3 +6,4 @@ export { default as Footer } from './Footer';
 export { default as Carousel_Section } from './main/Carousel';
 export { default as ShopNow_Section } from './main/ShopNow';
 export { default as Collection_HighLight } from './main/Collection_HighLight';
+export { default as Story_Section } from './main/Story';

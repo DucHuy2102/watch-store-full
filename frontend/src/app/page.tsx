@@ -4,6 +4,7 @@ import {
     Footer,
     Navbar,
     ShopNow_Section,
+    Story_Section,
 } from '@/components/layouts';
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
                 <Carousel_Section />
                 <ShopNow_Section />
                 <Collection_HighLight />
+                <Story_Section />
             </main>
             <Footer />
         </div>
