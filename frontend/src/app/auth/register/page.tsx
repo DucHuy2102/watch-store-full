@@ -57,7 +57,7 @@ export default function Register() {
         <div className='min-h-screen w-full flex items-center justify-center relative bg-gradient-to-br from-gray-900 to-black p-4'>
             <div className='absolute inset-0 overflow-hidden'>
                 <Image
-                    src='/register_img.webp'
+                    src='/auth/register_img.webp'
                     alt='Luxury Watch Background'
                     fill
                     className='object-cover opacity-20'
@@ -66,14 +66,14 @@ export default function Register() {
                 <div className='absolute inset-0 bg-black/50 backdrop-blur-sm'></div>
             </div>
 
-            <div className='absolute top-5 left-1/2 -translate-x-1/2'>
-                <LogoApp variant='primary' className='text-3xl' />
+            <div className='absolute top-4 left-1/2 -translate-x-1/2'>
+                <LogoApp variant='primary' />
             </div>
 
             <div className='relative w-full max-w-4xl flex rounded-2xl overflow-hidden bg-black/30 backdrop-blur-md border border-white/10 shadow-2xl'>
                 <div className='hidden md:block w-1/2 relative'>
                     <Image
-                        src='/register_img.webp'
+                        src='/auth/register_img.webp'
                         alt='Luxury Watch'
                         fill
                         className='object-cover'

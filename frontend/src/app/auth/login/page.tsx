@@ -50,7 +50,7 @@ export default function Login() {
         >
             <div className='absolute inset-0 overflow-hidden'>
                 <Image
-                    src='/login_1.jpeg'
+                    src='/auth/login_img.jpg'
                     alt='Luxury Watch Background'
                     fill
                     className='object-cover opacity-20'
@@ -69,7 +69,7 @@ export default function Login() {
             >
                 <div className='hidden md:block w-1/2 relative'>
                     <Image
-                        src='/login_img.jpg'
+                        src='/auth/login_img.jpg'
                         alt='Luxury Watch'
                         fill
                         className='object-cover'

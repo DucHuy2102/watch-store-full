@@ -1,4 +1,10 @@
-import { Carousel_Section, Footer, Navbar, ShopNow_Section } from '@/components/layouts';
+import {
+    Carousel_Section,
+    Collection_HighLight,
+    Footer,
+    Navbar,
+    ShopNow_Section,
+} from '@/components/layouts';
 
 export default function Home() {
     return (
@@ -7,6 +13,7 @@ export default function Home() {
             <main className='flex-grow'>
                 <Carousel_Section />
                 <ShopNow_Section />
+                <Collection_HighLight />
             </main>
             <Footer />
         </div>

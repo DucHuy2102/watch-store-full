@@ -12,7 +12,7 @@ import Link from 'next/link';
 
 const carouselData = [
     {
-        image: '/carousel_1.webp',
+        image: '/carousel/carousel_1.webp',
         title: 'Classic Elegance',
         description:
             'Timeless design meets modern craftsmanship. Our signature timepiece features premium materials and Swiss movement.',
@@ -20,7 +20,7 @@ const carouselData = [
         category: 'Luxury Collection',
     },
     {
-        image: '/carousel_2.webp',
+        image: '/carousel/carousel_2.webp',
         title: 'Military Precision',
         description:
             'Inspired by military heritage, built for everyday adventures. Featuring 24-hour time and water resistance.',
@@ -28,7 +28,7 @@ const carouselData = [
         category: 'Sport Series',
     },
     {
-        image: '/carousel_3.webp',
+        image: '/carousel/carousel_3.webp',
         title: 'Sport Chronograph',
         description:
             'Performance meets style. Track every second with precision in this sophisticated chronograph watch.',
@@ -36,7 +36,7 @@ const carouselData = [
         category: 'Professional Series',
     },
     {
-        image: '/carousel_4.webp',
+        image: '/carousel/carousel_4.webp',
         title: 'Modern Classic',
         description:
             'The perfect blend of traditional watchmaking and contemporary design. A statement piece for any occasion.',
@@ -44,7 +44,7 @@ const carouselData = [
         category: 'Classic Collection',
     },
     {
-        image: '/carousel_5.jpg',
+        image: '/carousel/carousel_5.jpg',
         title: 'Vintage Collection',
         description:
             'A tribute to timeless style. Hand-finished details and premium leather strap make this piece truly special.',

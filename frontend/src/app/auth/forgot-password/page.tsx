@@ -36,7 +36,7 @@ export default function ForgotPassword() {
         <div className='min-h-screen w-full flex items-center justify-center relative bg-gradient-to-br from-gray-900 to-black p-4'>
             <div className='absolute inset-0 overflow-hidden'>
                 <Image
-                    src='/forgot_password.webp'
+                    src='/auth/forgot_password.webp'
                     alt='Luxury Watch Background'
                     fill
                     className='object-cover opacity-20'
@@ -52,7 +52,7 @@ export default function ForgotPassword() {
             <div className='relative w-full max-w-4xl flex rounded-2xl overflow-hidden bg-black/30 backdrop-blur-md border border-white/10 shadow-2xl'>
                 <div className='hidden md:block w-1/2 relative'>
                     <Image
-                        src='/forgot_password.webp'
+                        src='/auth/forgot_password.webp'
                         alt='Luxury Watch'
                         fill
                         className='object-cover'
