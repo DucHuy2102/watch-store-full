@@ -71,16 +71,16 @@ export default function NavigationMenuDemo() {
                     </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                    <Link href='/about-us' legacyBehavior passHref>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                            About Us
-                        </NavigationMenuLink>
-                    </Link>
-                </NavigationMenuItem>{' '}
-                <NavigationMenuItem>
                     <Link href='/service' legacyBehavior passHref>
                         <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                             Service & Support
+                        </NavigationMenuLink>
+                    </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                    <Link href='/about-us' legacyBehavior passHref>
+                        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                            About Us
                         </NavigationMenuLink>
                     </Link>
                 </NavigationMenuItem>

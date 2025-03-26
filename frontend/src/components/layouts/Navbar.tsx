@@ -6,7 +6,10 @@ import ToggleTheme from './ToggleTheme';
 
 export default function Navbar() {
     return (
-        <div className='px-10 py-2 md:px-20 flex justify-between items-center dark:border-b border-zinc-200 dark:border-zinc-800 shadow-sm'>
+        <div
+            className='px-10 py-2 md:px-20 w-full flex justify-between items-center
+        dark:border-b border-zinc-200 dark:border-zinc-800 shadow-sm'
+        >
             <LogoApp />
             <Search />
             <Navigation_Menu />
