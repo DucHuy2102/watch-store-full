@@ -11,9 +11,9 @@ const sortOptions = [
     { value: 'rating', label: 'Highest Rated' },
 ];
 
-interface OptionsProps {
+type OptionsProps = {
     handleSelect: (value: string, label: string) => void;
-}
+};
 
 const Options = ({ handleSelect }: OptionsProps) => {
     return (
