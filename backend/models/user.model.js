@@ -13,7 +13,6 @@ const userSchema = new mongoose.Schema(
         },
         fullName: {
             type: String,
-            required: true,
         },
         email: {
             type: String,
@@ -26,7 +25,6 @@ const userSchema = new mongoose.Schema(
         },
         phoneNumber: {
             type: String,
-            required: true,
         },
         address: {
             type: mongoose.Schema.Types.ObjectId,
