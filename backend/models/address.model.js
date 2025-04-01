@@ -19,7 +19,7 @@ const addressSchema = new mongoose.Schema(
             key: String,
             value: String,
         },
-        fullAddress: String,    
+        fullAddress: String,
     },
     { timestamps: true }
 );
