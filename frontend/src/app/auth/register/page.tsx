@@ -1,6 +1,5 @@
 'use client';
 
-import { LogoApp } from '@/components/customs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
@@ -10,8 +9,9 @@ import { FiUser, FiLock, FiMail } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import { useState, FormEvent, ChangeEvent } from 'react';
-import { PasswordStrengthMeter } from '@/utils';
 import toast from '@/utils/Toast';
+import { LogoApp } from '@/components/layouts';
+import PasswordStrengthMeter from '@/utils/PasswordStrengthMeter';
 
 interface IFormData {
     username: string;

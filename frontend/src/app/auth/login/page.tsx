@@ -8,20 +8,27 @@ import { IoIosSend } from 'react-icons/io';
 import { FiUser, FiLock } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
-import LogoApp from '@/components/customs/LogoApp';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import toast from '@/utils/Toast';
+import { signIn } from '@/api/auth';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { getUser } from '@/lib/redux/slices/authSlice';
+import { LogoApp } from '@/components/layouts';
 
-interface IFormData {
+type FormData = {
     username: string;
     password: string;
-}
+};
 
 export default function Login() {
-    const [formData, setFormData] = useState<IFormData>({
+    const router = useRouter();
+    const dispatch = useDispatch();
+    const [formData, setFormData] = useState<FormData>({
         username: '',
         password: '',
     });
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -33,13 +40,20 @@ export default function Login() {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
-            console.log('Form submitted:', formData);
+            const res = await signIn(formData.username, formData.password);
+            dispatch(getUser(res.user));
             toast.success('Login successfully!');
+            setTimeout(() => {
+                router.push('/');
+            }, 2000);
         } catch (error) {
             console.error('Login error:', error);
             toast.error('Failed to Login. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -133,11 +147,14 @@ export default function Login() {
 
                         <Button
                             type='submit'
+                            disabled={loading}
                             className='w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 
                             rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group'
                         >
-                            Sign In
-                            <IoIosSend className='group-hover:translate-x-1 transition-transform duration-300' />
+                            {loading ? 'Signing In...' : 'Sign In'}
+                            {!loading && (
+                                <IoIosSend className='group-hover:translate-x-1 transition-transform duration-300' />
+                            )}
                         </Button>
 
                         <div className='relative flex items-center gap-4 py-4'>
@@ -150,6 +167,7 @@ export default function Login() {
 
                         <div className='grid grid-cols-2 gap-4'>
                             <Button
+                                disabled={loading}
                                 type='button'
                                 variant='outline'
                                 className='bg-white/10 border-white/10 text-white hover:bg-white/20 hover:text-white 
@@ -159,6 +177,7 @@ export default function Login() {
                                 Google
                             </Button>
                             <Button
+                                disabled={loading}
                                 type='button'
                                 variant='outline'
                                 className='bg-white/10 border-white/10 text-white hover:bg-white/20 hover:text-white 

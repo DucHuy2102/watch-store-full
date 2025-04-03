@@ -17,7 +17,7 @@ import {
     CommandItem,
     CommandList,
     CommandSeparator,
-} from '../ui/command';
+} from '../../ui/command';
 import { Calculator, Calendar, CommandIcon, Smile } from 'lucide-react';
 
 export default function Search() {

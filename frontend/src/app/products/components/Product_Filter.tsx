@@ -35,7 +35,7 @@ const features = [
     'Date Display',
 ];
 
-export default function Filter() {
+export default function Product_Filter() {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [selectedStyles, setSelectedStyles] = useState<string[]>([]);

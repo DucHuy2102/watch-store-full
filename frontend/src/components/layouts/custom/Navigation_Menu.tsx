@@ -85,9 +85,9 @@ export default function NavigationMenuDemo() {
                     </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                    <Link href='/cart' legacyBehavior passHref>
+                    <Link href='/compare' legacyBehavior passHref>
                         <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                            Your Cart
+                            Compare
                         </NavigationMenuLink>
                     </Link>
                 </NavigationMenuItem>

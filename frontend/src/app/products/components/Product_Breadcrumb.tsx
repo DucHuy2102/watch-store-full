@@ -9,7 +9,7 @@ import {
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 
-export default function Breadcrumb_Product() {
+export default function Product_Breadcrumb() {
     return (
         <Breadcrumb>
             <BreadcrumbList>

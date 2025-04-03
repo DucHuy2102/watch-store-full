@@ -1,6 +1,6 @@
-import Product_Card from './Product_Card';
+import { Product_Card } from '.';
 
-export default function Products() {
+export default function Product_Grid() {
     return (
         <div className='mt-5 grid grid-cols-3 gap-7'>
             <Product_Card

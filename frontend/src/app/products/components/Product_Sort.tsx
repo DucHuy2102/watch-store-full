@@ -38,7 +38,7 @@ const Options = ({ handleSelect }: OptionsProps) => {
     );
 };
 
-export default function Sort() {
+export default function Product_Sort() {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string>('');
     const dropdownRef = useRef<HTMLDivElement>(null);

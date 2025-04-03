@@ -7,10 +7,10 @@ import Link from 'next/link';
 import { IoIosSend } from 'react-icons/io';
 import { FiMail, FiCheckCircle, FiExternalLink } from 'react-icons/fi';
 import { SiGmail } from 'react-icons/si';
-import { LogoApp } from '@/components/customs';
 import { FormEvent, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from '@/utils/Toast';
+import { LogoApp } from '@/components/layouts';
 
 export default function ForgotPassword() {
     const [isSent, setIsSent] = useState(false);

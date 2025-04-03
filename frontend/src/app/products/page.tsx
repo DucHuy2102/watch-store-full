@@ -1,10 +1,5 @@
-import {
-    Footer,
-    Navbar,
-    Product_Pagination,
-    Products_Grid,
-    Product_Sort_Filter,
-} from '@/components/layouts';
+import { Footer, Navbar } from '@/components/layouts';
+import { Product_Grid, Product_Pagination, Product_Sort_Filter } from './components';
 
 export default function Products() {
     return (
@@ -12,7 +7,7 @@ export default function Products() {
             <Navbar />
             <main className='flex-grow min-h-screen px-5 md:px-10 py-1 md:py-3'>
                 <Product_Sort_Filter />
-                <Products_Grid />
+                <Product_Grid />
                 <Product_Pagination />
             </main>
             <Footer />

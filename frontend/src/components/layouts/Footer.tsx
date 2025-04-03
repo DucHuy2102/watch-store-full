@@ -1,8 +1,8 @@
 import { FaGithub, FaFacebookF } from 'react-icons/fa';
-import { LogoApp } from '../customs';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import LogoApp from './custom/LogoApp';
 
 const GITHUB_LINK = process.env.NEXT_PUBLIC_GITHUB_LINK;
 const FACEBOOK_LINK = process.env.NEXT_PUBLIC_FACEBOOK_LINK;

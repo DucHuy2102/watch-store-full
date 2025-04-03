@@ -1,8 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import Breadcrumb_Product from './Breadcrumb';
-import { Filter_Product, Sort_Product } from '..';
+import { Product_Filter, Product_Sort } from '.';
+import Breadcrumb_Product from './Product_Breadcrumb';
 
 export default function Product_Sort_Filter() {
     return (
@@ -12,8 +11,8 @@ export default function Product_Sort_Filter() {
                 <span className='text-2xl font-medium tracking-tight'>Men's watch</span>
             </div>
             <div className='flex items-center gap-2'>
-                <Sort_Product />
-                <Filter_Product />
+                <Product_Sort />
+                <Product_Filter />
             </div>
         </div>
     );
