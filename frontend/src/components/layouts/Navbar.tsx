@@ -19,6 +19,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { IUser } from '@/lib/redux/interfaces/auth.interface';
 import { clearUser } from '@/lib/redux/slices/authSlice';
+import { toast } from 'react-toastify';
+import { signOut } from '@/api/auth';
 
 export default function Navbar() {
     const { user } = useSelector((state: RootState) => state.auth);
@@ -47,6 +49,17 @@ export default function Navbar() {
 
 const UserDropdown = ({ user }: { user: IUser }) => {
     const dispatch = useDispatch();
+
+    const handleLogout = async () => {
+        try {
+            await signOut();
+            dispatch(clearUser());
+            toast.success('Logout successfully!');
+        } catch (error) {
+            console.error('Logout error:', error);
+            toast.error('Failed to logout. Please try again.');
+        }
+    };
 
     return (
         <DropdownMenu>
@@ -80,7 +93,7 @@ const UserDropdown = ({ user }: { user: IUser }) => {
                     </Link>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => dispatch(clearUser())}>
+                <DropdownMenuItem onClick={handleLogout}>
                     Log out
                     <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                 </DropdownMenuItem>

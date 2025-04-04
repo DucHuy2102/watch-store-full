@@ -6,27 +6,23 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { IoIosSend } from 'react-icons/io';
 import { FiUser, FiLock, FiMail } from 'react-icons/fi';
-import { FcGoogle } from 'react-icons/fc';
-import { FaGithub } from 'react-icons/fa';
 import { useState, FormEvent, ChangeEvent } from 'react';
 import toast from '@/utils/Toast';
 import { LogoApp } from '@/components/layouts';
-import PasswordStrengthMeter from '@/utils/PasswordStrengthMeter';
-
-interface IFormData {
-    username: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
+import PasswordStrengthMeter, { getStrength } from '@/utils/PasswordStrengthMeter';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
+import { signUp, UserType } from '@/api/auth';
 
 export default function Register() {
-    const [formData, setFormData] = useState<IFormData>({
+    const router = useRouter();
+    const [formData, setFormData] = useState<UserType>({
         username: '',
         email: '',
         password: '',
         confirmPassword: '',
     });
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -38,18 +34,32 @@ export default function Register() {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsLoading(true);
 
         if (formData.password !== formData.confirmPassword) {
-            toast.error('Passwords do not match!');
+            toast.error("Passwords don't match!");
+            setIsLoading(false);
+            return;
+        }
+
+        if (getStrength(formData.password) < 3) {
+            toast.error('Password too weak!');
+            setIsLoading(false);
             return;
         }
 
         try {
-            console.log('Form submitted:', formData);
-            toast.success('Account created successfully!');
+            const { confirmPassword, ...rest } = formData;
+            await signUp(rest);
+            toast.success("Let's verify your email!");
+            setTimeout(() => {
+                router.push('/auth/verify-email');
+            }, 2000);
         } catch (error) {
             console.error('Registration error:', error);
             toast.error('Failed to create account. Please try again.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -64,10 +74,6 @@ export default function Register() {
                     priority
                 />
                 <div className='absolute inset-0 bg-black/50 backdrop-blur-sm'></div>
-            </div>
-
-            <div className='absolute top-4 left-1/2 -translate-x-1/2'>
-                <LogoApp variant='primary' />
             </div>
 
             <div className='relative w-full max-w-4xl flex rounded-2xl overflow-hidden bg-black/30 backdrop-blur-md border border-white/10 shadow-2xl'>
@@ -168,50 +174,37 @@ export default function Register() {
                         <Button
                             type='submit'
                             className='w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold 
-                            py-2 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group'
+                        py-2 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group'
                         >
-                            Create Account
-                            <IoIosSend className='group-hover:translate-x-1 transition-transform duration-300' />
+                            {isLoading ? (
+                                <>
+                                    <Loader2 className='w-4 h-4 animate-spin' />
+                                    <span>Creating account...</span>
+                                </>
+                            ) : (
+                                <>
+                                    Create Account
+                                    <IoIosSend className='group-hover:translate-x-1 transition-transform duration-300' />
+                                </>
+                            )}
                         </Button>
-
-                        <div className='relative flex items-center gap-4 py-4'>
-                            <div className='flex-grow h-px bg-gray-600'></div>
-                            <span className='text-gray-400 bg-transparent px-0.5 text-sm whitespace-nowrap'>
-                                Or continue with
-                            </span>
-                            <div className='flex-grow h-px bg-gray-600'></div>
-                        </div>
-
-                        <div className='grid grid-cols-2 gap-4'>
-                            <Button
-                                type='button'
-                                variant='outline'
-                                className='bg-white/10 border-white/10 text-white hover:bg-white/20 
-                                hover:text-white transition-all duration-300 flex items-center justify-center gap-2'
-                            >
-                                <FcGoogle className='w-5 h-5' />
-                                Google
-                            </Button>
-                            <Button
-                                type='button'
-                                variant='outline'
-                                className='bg-white/10 border-white/10 text-white hover:bg-white/20 
-                                hover:text-white transition-all duration-300 flex items-center justify-center gap-2'
-                            >
-                                <FaGithub className='w-5 h-5' />
-                                GitHub
-                            </Button>
-                        </div>
                     </form>
 
-                    <div className='text-center space-y-2'>
-                        <p className='text-gray-400'>Already have an account?</p>
-                        <Link
-                            href='/auth/login'
-                            className='text-yellow-500 hover:text-yellow-400 font-medium transition-colors duration-300'
-                        >
-                            Sign in to your account
-                        </Link>
+                    <div className='flex items-center justify-between'>
+                        <div className='text-center space-y-2'>
+                            <p className='text-gray-400'>Visit our</p>
+                            <LogoApp variant='primary' />
+                        </div>
+                        <div className='h-full bg-zinc-500 w-0.5' />
+                        <div className='text-center space-y-2'>
+                            <p className='text-gray-400'>Back to</p>
+                            <Link
+                                href='/auth/login'
+                                className='text-yellow-500 hover:text-yellow-400 font-medium transition-colors duration-300'
+                            >
+                                Sign in page
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

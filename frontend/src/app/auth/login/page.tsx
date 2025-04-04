@@ -10,21 +10,16 @@ import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import toast from '@/utils/Toast';
-import { signIn } from '@/api/auth';
+import { signIn, UserType } from '@/api/auth';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { getUser } from '@/lib/redux/slices/authSlice';
 import { LogoApp } from '@/components/layouts';
 
-type FormData = {
-    username: string;
-    password: string;
-};
-
 export default function Login() {
     const router = useRouter();
     const dispatch = useDispatch();
-    const [formData, setFormData] = useState<FormData>({
+    const [formData, setFormData] = useState<Omit<UserType, 'email' | 'confirmPassword'>>({
         username: '',
         password: '',
     });
@@ -43,7 +38,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const res = await signIn(formData.username, formData.password);
+            const res = await signIn(formData);
             dispatch(getUser(res.user));
             toast.success('Login successfully!');
             setTimeout(() => {
