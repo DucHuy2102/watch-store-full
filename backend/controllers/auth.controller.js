@@ -13,12 +13,6 @@ import {
 export const signup = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        if (!username || !email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: 'All fields are required',
-            });
-        }
 
         const normalizedEmail = email.toLowerCase();
         const isUserExist = await UserModel.findOne({
@@ -27,7 +21,7 @@ export const signup = async (req, res) => {
         if (isUserExist) {
             return res.status(400).json({
                 success: false,
-                message: 'User already exists',
+                message: 'User already exists !!!',
             });
         }
 
@@ -72,7 +66,7 @@ export const verifyEmail = async (req, res) => {
         if (!user) {
             return res.status(400).json({
                 success: false,
-                message: 'Invalid verification code',
+                message: 'Invalid verification code !!!',
             });
         }
         user.isVerified = true;
@@ -85,7 +79,7 @@ export const verifyEmail = async (req, res) => {
         const { password: pass, ...rest } = user._doc;
         res.status(200).json({
             success: true,
-            message: 'Email verified successfully',
+            message: 'Email verified successfully!',
             user: rest,
         });
     } catch (error) {
@@ -100,18 +94,12 @@ export const verifyEmail = async (req, res) => {
 export const signin = async (req, res) => {
     try {
         const { username, password } = req.body;
-        if (!username || !password) {
-            return res.status(400).json({
-                success: false,
-                message: 'All fields are required',
-            });
-        }
 
         const user = await UserModel.findOne({ username });
         if (!user) {
             return res.status(400).json({
                 success: false,
-                message: 'User not found',
+                message: 'User not found !!!',
             });
         }
 
@@ -119,16 +107,16 @@ export const signin = async (req, res) => {
         if (!isPasswordCorrect) {
             return res.status(400).json({
                 success: false,
-                message: 'Invalid password',
+                message: 'Your password is incorrect!',
             });
         }
 
-        if (!user.isVerified) {
-            return res.status(400).json({
-                success: false,
-                message: 'Please verify your email',
-            });
-        }
+        // if (!user.isVerified) {
+        //     return res.status(400).json({
+        //         success: false,
+        //         message: 'Please verify your email to login!',
+        //     });
+        // }
 
         generateTokenAndSetCookie(res, user._id);
 
@@ -177,21 +165,21 @@ export const signout = async (req, res) => {
 export const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
-        const user = await UserModel.findOne({ email });
+        const user = await UserModel.findOne({ email: email.trim() });
         if (!user) {
             return res.status(400).json({
                 success: false,
-                message: 'User not found',
+                message: 'User not found !!!',
             });
         }
-        const resetToken = cryptojs.lib.WordArray.random(20).toString(cryptojs.enc.Hex);
-        const resetTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000;
+        const code = cryptojs.lib.WordArray.random(20).toString(cryptojs.enc.Hex);
+        const codeExpiresAt = Date.now() + 24 * 60 * 60 * 1000;
 
-        user.resetPasswordToken = resetToken;
-        user.resetPasswordExpiresAt = resetTokenExpiresAt;
+        user.resetPasswordToken = code;
+        user.resetPasswordExpiresAt = codeExpiresAt;
         await user.save();
 
-        const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+        const resetPasswordUrl = `${process.env.FRONTEND_URL}/auth/reset-password/${code}`;
         await sendEmail_ResetPassword(user.email, user.username, resetPasswordUrl);
 
         res.status(200).json({
@@ -209,17 +197,17 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
     try {
-        const { token } = req.params;
+        const { code } = req.params;
         const { password } = req.body;
 
         const user = await UserModel.findOne({
-            resetPasswordToken: token,
+            resetPasswordToken: code,
             resetPasswordExpiresAt: { $gt: Date.now() },
         });
         if (!user) {
             return res.status(400).json({
                 success: false,
-                message: 'Invalid or expired reset password token',
+                message: 'Invalid or expired reset password code',
             });
         }
 

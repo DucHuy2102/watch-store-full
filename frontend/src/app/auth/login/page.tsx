@@ -45,8 +45,13 @@ export default function Login() {
                 router.push('/');
             }, 2000);
         } catch (error) {
-            console.error('Login error:', error);
-            toast.error('Failed to Login. Please try again.');
+            console.error(error);
+            if (error instanceof Error && 'status' in error && error.status === 400) {
+                const apiError = error as any;
+                toast.error(apiError.response?.data?.message);
+            } else {
+                toast.error('Crash server - Please try later !!!');
+            }
         } finally {
             setLoading(false);
         }

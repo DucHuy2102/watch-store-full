@@ -11,21 +11,38 @@ import { FormEvent, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from '@/utils/Toast';
 import { LogoApp } from '@/components/layouts';
+import { Loader2 } from 'lucide-react';
+import { forgotPassword } from '@/api/auth';
 
 export default function ForgotPassword() {
     const [isSent, setIsSent] = useState(false);
     const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsSent(true);
+        setIsLoading(true);
+
         try {
-            console.log('Form submitted:', email);
-            toast.success('Form has been sent successfully!');
+            await forgotPassword(email);
+            setIsSent(true);
+            toast.success("Let's check your email.");
         } catch (error) {
-            console.error('Login error:', error);
-            toast.error('Something went wrong! Please try again.');
+            console.error(error);
+            if (error instanceof Error && 'status' in error && error.status === 400) {
+                const apiError = error as any;
+                toast.error(apiError.response?.data?.message);
+            } else {
+                toast.error('Crash server - Please try later !!!');
+            }
+        } finally {
+            setIsLoading(false);
         }
+    };
+
+    const handleChangeEmail = () => {
+        setIsSent(false);
+        setEmail('');
     };
 
     const openGmail = () => {
@@ -102,11 +119,21 @@ export default function ForgotPassword() {
 
                                     <Button
                                         type='submit'
+                                        disabled={isLoading}
                                         className='w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold 
                                         py-2 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group'
                                     >
-                                        Send Reset Instructions
-                                        <IoIosSend className='group-hover:translate-x-1 transition-transform duration-300' />
+                                        {isLoading ? (
+                                            <>
+                                                <Loader2 className='w-4 h-4 animate-spin' />
+                                                <span>Sending reset instructions...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                Send Reset Instructions
+                                                <IoIosSend className='group-hover:translate-x-1 transition-transform duration-300' />
+                                            </>
+                                        )}
                                     </Button>
                                 </form>
                             </motion.div>
@@ -148,7 +175,7 @@ export default function ForgotPassword() {
                                         </Button>
                                         <span className='text-gray-400 text-sm'>or</span>
                                         <Button
-                                            onClick={() => setIsSent(false)}
+                                            onClick={handleChangeEmail}
                                             variant='outline'
                                             className='bg-white/10 border-white/10 text-white hover:bg-white/20 
                                             hover:text-white transition-all duration-300'

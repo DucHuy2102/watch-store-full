@@ -5,26 +5,24 @@ import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import Link from 'next/link';
 import { IoIosSend } from 'react-icons/io';
-import { FiUser, FiLock, FiMail } from 'react-icons/fi';
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { FiLock } from 'react-icons/fi';
+import { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import toast from '@/utils/Toast';
 import { LogoApp } from '@/components/layouts';
-import PasswordStrengthMeter, { getStrength } from '@/utils/PasswordStrengthMeter';
-import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import { signUp, UserType } from '@/api/auth';
+import { resetPassword } from '@/api/auth';
+import PasswordStrengthMeter from '@/utils/PasswordStrengthMeter';
 
-export default function Register() {
+export default function ResetPassword({ params }: { params: { code: string } }) {
     const router = useRouter();
-    const [formData, setFormData] = useState<UserType>({
-        username: '',
-        email: '',
+    const [formData, setFormData] = useState({
         password: '',
         confirmPassword: '',
     });
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
@@ -42,23 +40,20 @@ export default function Register() {
             return;
         }
 
-        if (getStrength(formData.password) < 3) {
-            toast.error('Password too weak!');
-            setIsLoading(false);
-            return;
-        }
-
         try {
-            const { confirmPassword, ...rest } = formData;
-            await signUp(rest);
-            toast.success("Let's verify your email!");
+            await resetPassword({
+                code: params.code,
+                password: formData.password,
+            });
+            toast.success('Password reset successfully!');
             setTimeout(() => {
-                router.push('/auth/verify-email');
+                router.push('/auth/login');
             }, 2000);
         } catch (error) {
             console.error(error);
             if (error instanceof Error && 'status' in error && error.status === 400) {
-                toast.error('User already exists !!!');
+                const apiError = error as any;
+                toast.error(apiError.response?.data?.message);
             } else {
                 toast.error('Crash server - Please try later !!!');
             }
@@ -71,7 +66,7 @@ export default function Register() {
         <div className='min-h-screen w-full flex items-center justify-center relative bg-gradient-to-br from-gray-900 to-black p-4'>
             <div className='absolute inset-0 overflow-hidden'>
                 <Image
-                    src='/auth/register_img.webp'
+                    src='/auth/verify-email.jpg'
                     alt='Luxury Watch Background'
                     fill
                     className='object-cover opacity-20'
@@ -80,10 +75,14 @@ export default function Register() {
                 <div className='absolute inset-0 bg-black/50 backdrop-blur-sm'></div>
             </div>
 
+            <div className='absolute top-8 left-1/2 -translate-x-1/2'>
+                <LogoApp variant='primary' />
+            </div>
+
             <div className='relative w-full max-w-4xl flex rounded-2xl overflow-hidden bg-black/30 backdrop-blur-md border border-white/10 shadow-2xl'>
                 <div className='hidden md:block w-1/2 relative'>
                     <Image
-                        src='/auth/register_img.webp'
+                        src='/auth/verify-email.jpg'
                         alt='Luxury Watch'
                         fill
                         className='object-cover'
@@ -95,55 +94,20 @@ export default function Register() {
                 <div className='w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center space-y-8'>
                     <div className='text-center space-y-2'>
                         <h1 className='text-3xl md:text-4xl font-bold tracking-tight text-white'>
-                            Create <span className='text-yellow-500'>Account</span>
+                            Reset <span className='text-yellow-500'>Password</span>
                         </h1>
-                        <p className='text-gray-400 text-sm'>
-                            Fill in the form to create your new account
-                        </p>
+                        <p className='text-gray-400 text-sm'>Enter your new password below</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className='space-y-6'>
                         <div className='space-y-4'>
-                            <div className='relative'>
-                                <FiUser className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
-                                <Input
-                                    type='text'
-                                    id='username'
-                                    name='username'
-                                    placeholder='Username'
-                                    value={formData.username}
-                                    onChange={handleChange}
-                                    autoFocus
-                                    className='w-full pl-10 bg-white/10 border-white/10 text-white 
-                                    placeholder:text-gray-400 focus:border-yellow-500 focus:ring-yellow-500 
-                                    transition-all duration-300'
-                                    required
-                                />
-                            </div>
-
-                            <div className='relative'>
-                                <FiMail className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
-                                <Input
-                                    type='email'
-                                    id='email'
-                                    name='email'
-                                    placeholder='Email'
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className='w-full pl-10 bg-white/10 border-white/10 text-white 
-                                    placeholder:text-gray-400 focus:border-yellow-500 focus:ring-yellow-500 
-                                    transition-all duration-300'
-                                    required
-                                />
-                            </div>
-
                             <div className='relative'>
                                 <FiLock className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
                                 <Input
                                     type='password'
                                     id='password'
                                     name='password'
-                                    placeholder='Password'
+                                    placeholder='New Password'
                                     value={formData.password}
                                     onChange={handleChange}
                                     className='w-full pl-10 bg-white/10 border-white/10 text-white 
@@ -163,7 +127,7 @@ export default function Register() {
                                     type='password'
                                     id='confirmPassword'
                                     name='confirmPassword'
-                                    placeholder='Confirm Password'
+                                    placeholder='Confirm New Password'
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
                                     className='w-full pl-10 bg-white/10 border-white/10 text-white 
@@ -176,38 +140,32 @@ export default function Register() {
 
                         <Button
                             type='submit'
+                            disabled={isLoading}
                             className='w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold 
-                        py-2 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group'
+                            py-2 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group'
                         >
                             {isLoading ? (
                                 <>
                                     <Loader2 className='w-4 h-4 animate-spin' />
-                                    <span>Creating account...</span>
+                                    <span>Resetting password...</span>
                                 </>
                             ) : (
                                 <>
-                                    Create Account
+                                    Reset Password
                                     <IoIosSend className='group-hover:translate-x-1 transition-transform duration-300' />
                                 </>
                             )}
                         </Button>
                     </form>
 
-                    <div className='flex items-center justify-between'>
-                        <div className='text-center space-y-2'>
-                            <p className='text-gray-400'>Visit our</p>
-                            <LogoApp variant='primary' />
-                        </div>
-                        <div className='h-full bg-zinc-500 w-0.5' />
-                        <div className='text-center space-y-2'>
-                            <p className='text-gray-400'>Back to</p>
-                            <Link
-                                href='/auth/login'
-                                className='text-yellow-500 hover:text-yellow-400 font-medium transition-colors duration-300'
-                            >
-                                Sign in page
-                            </Link>
-                        </div>
+                    <div className='text-center space-y-2'>
+                        <p className='text-gray-400'>Remember your password?</p>
+                        <Link
+                            href='/auth/login'
+                            className='text-yellow-500 hover:text-yellow-400 hover:underline font-medium transition-colors duration-300'
+                        >
+                            Back to Sign in
+                        </Link>
                     </div>
                 </div>
             </div>

@@ -32,11 +32,7 @@ export const forgotPassword = async (email: string) => {
     return res.data;
 };
 
-export const resetPassword = async (data: {
-    code: string;
-    password: string;
-    confirmPassword: string;
-}) => {
-    const res = await axiosClient.post('/auth/reset-password', data);
+export const resetPassword = async ({ code, password }: { code: string; password: string }) => {
+    const res = await axiosClient.post(`/auth/reset-password/${code}`, { password });
     return res.data;
 };

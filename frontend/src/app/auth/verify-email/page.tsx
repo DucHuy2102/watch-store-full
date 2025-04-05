@@ -21,15 +21,19 @@ export default function VerifyEmail() {
         setIsLoading(true);
 
         try {
-            console.log({ code });
             await verifyEmail(code);
             toast.success("Let's get you logged in!");
             setTimeout(() => {
                 router.push('/auth/login');
             }, 2000);
         } catch (error) {
-            console.error('Verification error:', error);
-            toast.error('Invalid verification code. Please try again.');
+            console.log(error);
+            if (error instanceof Error && 'status' in error && error.status === 400) {
+                const apiError = error as any;
+                toast.error(apiError.response?.data?.message);
+            } else {
+                toast.error('Crash server - Please try later !!!');
+            }
         } finally {
             setIsLoading(false);
         }
