@@ -36,7 +36,34 @@ export default function LogoApp({ variant, className }: LogoAppProps) {
             >
                 <motion.h1 className={cn(logoTextVariants({ variant, className }))}>
                     <span>
-                        Watch
+                        <motion.span
+                            className='text-emerald-500 dark:text-emerald-400'
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{
+                                scale: 1,
+                                opacity: 1,
+                                transition: {
+                                    delay: 0.4,
+                                    duration: 0.5,
+                                    ease: 'backOut',
+                                },
+                            }}
+                            variants={{
+                                hover: {
+                                    scale: 1.2,
+                                    color: ['#10b981', '#059669', '#10b981'],
+                                    rotate: [0, -5, 5, 0],
+                                    transition: {
+                                        duration: 0.5,
+                                        ease: 'easeInOut',
+                                        repeat: 0,
+                                    },
+                                },
+                            }}
+                        >
+                            W
+                        </motion.span>
+                        atch
                         <motion.span
                             className='text-emerald-500 dark:text-emerald-400'
                             initial={{ scale: 0.8, opacity: 0 }}
