@@ -21,27 +21,45 @@ import { IUser } from '@/lib/redux/interfaces/auth.interface';
 import { clearUser } from '@/lib/redux/slices/authSlice';
 import { toast } from 'react-toastify';
 import { signOut } from '@/api/auth';
+import { FaPhoneAlt } from 'react-icons/fa';
+import { MdLocalShipping, MdEmail } from 'react-icons/md';
 
 export default function Navbar() {
     const { user } = useSelector((state: RootState) => state.auth);
 
     return (
-        <div
-            className='px-10 py-2 md:px-20 w-full flex justify-between items-center
-        dark:border-b border-zinc-200 dark:border-zinc-800 shadow-sm'
-        >
-            <LogoApp />
-            <Search />
-            <Navigation_Menu />
-            <div className='flex items-center gap-3'>
-                <ToggleTheme />
-                {user ? (
-                    <UserDropdown user={user} />
-                ) : (
-                    <Link href={'/auth/login'}>
-                        <Button className='cursor-pointer'>Sign In</Button>
-                    </Link>
-                )}
+        <div className='flex flex-col items-center justify-between'>
+            <div
+                className='px-10 py-1 md:px-20 w-full flex justify-between items-center font-mono text-sm md:text-base 
+            bg-zinc-100/50 dark:bg-zinc-800/50 backdrop-blur-md'
+            >
+                <div className='flex items-center gap-2'>
+                    <FaPhoneAlt />
+                    <span>0394 849 668</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                    <MdLocalShipping className='text-xl' />
+                    <span>Free Shipping in VietNam</span>
+                </div>
+                <div className='flex items-center gap-2'>
+                    <MdEmail className='text-xl' />
+                    <span>duchuytv2102@gmail.com</span>
+                </div>
+            </div>
+            <div className='px-10 py-3 md:px-20 w-full flex justify-between items-center'>
+                <LogoApp />
+                <Search />
+                <Navigation_Menu />
+                <div className='flex items-center gap-3'>
+                    <ToggleTheme />
+                    {user ? (
+                        <UserDropdown user={user} />
+                    ) : (
+                        <Link href={'/auth/login'}>
+                            <Button className='cursor-pointer'>Sign In</Button>
+                        </Link>
+                    )}
+                </div>
             </div>
         </div>
     );

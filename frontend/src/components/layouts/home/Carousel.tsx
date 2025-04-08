@@ -60,7 +60,7 @@ export default function Carousel_Section() {
                 align: 'start',
                 loop: true,
             }}
-            className='w-full h-[calc(100vh-4rem)] mt-2 mx-auto overflow-hidden relative'
+            className='w-full h-[calc(100vh-4rem)] mx-auto overflow-hidden relative'
         >
             <CarouselContent>
                 {carouselData.map((item, index) => (
