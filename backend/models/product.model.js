@@ -2,23 +2,27 @@ import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema(
     {
-        name: {
-            type: String,
-            required: true,
-        },
-        description: {
-            type: String,
-            required: true,
-        },
         variants: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'ProductVariant',
             },
         ],
+        defaultVariantId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'ProductVariant',
+        },
         brandId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Brand',
+            required: true,
+        },
+        name: {
+            type: String,
+            required: true,
+        },
+        description: {
+            type: String,
             required: true,
         },
         movementType: String,
@@ -35,7 +39,27 @@ const productSchema = new mongoose.Schema(
         strapMaterial: String,
         strapBuckle: String,
         batteryType: String,
-        tags: [String],
+
+        isSale: {
+            type: Boolean,
+            default: false,
+        },
+        isNew: {
+            type: Boolean,
+            default: false,
+        },
+        isBestSeller: {
+            type: Boolean,
+            default: false,
+        },
+        isLimitedEdition: {
+            type: Boolean,
+            default: false,
+        },
+        minPrice: Number,
+        maxPrice: Number,
+        rating: Number,
+        totalSold: Number,
     },
     { timestamps: true }
 );

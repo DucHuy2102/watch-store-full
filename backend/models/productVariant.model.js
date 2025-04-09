@@ -11,6 +11,14 @@ const productVariantSchema = new mongoose.Schema(
         sellPrice: Number,
         originPrice: Number,
         stock: Number,
+        sold: {
+            type: Number,
+            default: 0,
+        },
+        rating: {
+            type: Number,
+            default: 0,
+        },
         images: [String],
     },
     { timestamps: true }

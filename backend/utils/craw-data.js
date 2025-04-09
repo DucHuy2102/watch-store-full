@@ -24,6 +24,24 @@ const urls = [
     'https://timex.com/products/expedition-titanium-automatic-41mm-eco-friendly-leather-strap-watch-tw2v54000',
     'https://timex.com/products/m79-automatic-x-peanuts-40mm-stainless-steel-bracelet-watch-tw2w47500',
     'https://timex.com/products/timex-x-peanuts-marlin-automatic-saxophonist-40mm-leather-strap-watch-tw2w68800',
+    'https://timex.com/products/marlin-jet-automatic-38mm-fabric-strap-watch-tw2y06300',
+    'https://timex.com/products/marlin-automatic-40mm-leather-strap-watch-twh6z4610',
+    'https://timex.com/products/marlin-automatic-40mm-leather-strap-watch-tw2w59700',
+    'https://timex.com/products/marlin-automatic-40mm-stainless-steel-bracelet-watch-tw2w59200',
+    'https://timex.com/products/marlin-automatic-40mm-leather-strap-watch-tw2v44500',
+    'https://timex.com/products/marlin-automatic-40mm-fabric-strap-watch-twh6z4710',
+    'https://timex.com/products/harborside-coast-automatic-43mm-stainless-steel-bracelet-watch-tw2v72100',
+    'https://timex.com/products/marlin-automatic-39mm-stainless-steel-bracelet-watch-tw2w58800',
+    'https://timex.com/products/marlin-automatic-40mm-leather-strap-watch-tw2v44600',
+    'https://timex.com/products/deepwater-reef-200-titanium-automatic-41mm-synthetic-rubber-strap-watch-tw2w73800',
+    'https://timex.com/products/mk1-automatic-40mm-fabric-strap-watch-tw2y07800',
+    'https://timex.com/products/timex-automatic-1983-e-line-34mm-leather-strap-watch-tw2y07500',
+    'https://timex.com/products/timex-automatic-1983-e-line-34mm-stainless-steel-expansion-band-watch-tw2y07400',
+    'https://timex.com/products/timex-automatic-1983-e-line-34mm-stainless-steel-expansion-band-watch-tw2y07300',
+    'https://timex.com/products/timex-automatic-1983-e-line-34mm-gold-tone-expansion-band-watch-tw2y07200',
+    'https://timex.com/products/marlin-jet-automatic-38mm-fabric-strap-watch-tw2y06400',
+    'https://timex.com/products/timex-automatic-1983-e-line-reissue-34mm-stainless-steel-expansion-band-watch-tw2w70800',
+    'https://timex.com/products/expedition-gmt-titanium-automatic-41mm-silicone-strap-watch-tw2w53000',
 ];
 
 function normalizeKey(key) {
@@ -88,12 +106,18 @@ async function runAll() {
 
     const brandId = '67f370c48fa29ba42e4262e7';
     const brandName = 'Automatic';
+    let count = 0;
 
     for (const url of urls) {
         try {
             console.log(`🌐 Crawling: ${url}`);
             const raw = await crawlTimexProduct(page, url);
             console.log('🧩 Data:', raw.name);
+            const isBestSeller = count % 2 === 0;
+            const isNew = count % 2 !== 0;
+            const isSale = !isNew;
+            const isLimitedEdition = false;
+            count++;
 
             const product = new ProductModel({
                 brandId,
@@ -114,7 +138,10 @@ async function runAll() {
                 strapMaterial: raw.specs['strap_material'] || '',
                 strapBuckle: raw.specs['strap_buckle'] || '',
                 batteryType: raw.specs['battery_type'] || '',
-                tags: ['sale', 'best-seller'],
+                isBestSeller,
+                isNew,
+                isSale,
+                isLimitedEdition,
             });
 
             const savedProduct = await product.save();
@@ -124,8 +151,10 @@ async function runAll() {
                 productId: savedProduct._id,
                 color: raw.specs['strap_color'] || 'default',
                 sellPrice: extractNumber(raw.sellPrice),
-                originPrice: extractNumber(raw.originPrice),
+                originPrice: extractNumber(raw.originPrice) ?? extractNumber(raw.sellPrice),
                 stock: 10,
+                sold: count,
+                rating: count + 2,
                 images: raw.images,
             });
 

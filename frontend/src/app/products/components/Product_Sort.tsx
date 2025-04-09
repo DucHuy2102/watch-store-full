@@ -6,9 +6,8 @@ import { IoChevronDown, IoClose } from 'react-icons/io5';
 const sortOptions = [
     { value: 'price-low', label: 'Price: Low to High' },
     { value: 'price-high', label: 'Price: High to Low' },
-    { value: 'newest', label: 'Newest First' },
-    { value: 'popular', label: 'Most Popular' },
-    { value: 'rating', label: 'Highest Rated' },
+    { value: 'new', label: 'Date: New to old' },
+    { value: 'rating', label: 'Rate: High to Low' },
 ];
 
 type OptionsProps = {
