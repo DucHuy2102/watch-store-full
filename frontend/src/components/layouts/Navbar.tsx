@@ -23,9 +23,22 @@ import { toast } from 'react-toastify';
 import { signOut } from '@/api/auth';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { MdLocalShipping, MdEmail } from 'react-icons/md';
+import { IoShieldCheckmark } from 'react-icons/io5';
+import { useCopyToClipboard } from '@uidotdev/usehooks';
 
 export default function Navbar() {
     const { user } = useSelector((state: RootState) => state.auth);
+    const [copiedText, copyToClipboard] = useCopyToClipboard();
+
+    const handleCopyEmail = async () => {
+        const email = 'duchuytv2102@gmail.com';
+        try {
+            await copyToClipboard(email);
+            toast.success('Email copied to clipboard!');
+        } catch (error) {
+            toast.error('Please try again later !!!');
+        }
+    };
 
     return (
         <div className='flex flex-col items-center justify-between'>
@@ -42,6 +55,14 @@ export default function Navbar() {
                     <span>Free Shipping in VietNam</span>
                 </div>
                 <div className='flex items-center gap-2'>
+                    <IoShieldCheckmark className='text-lg' />
+                    <span>Lifetime warranty</span>
+                </div>
+                <div
+                    className='flex items-center gap-2 cursor-pointer'
+                    onClick={handleCopyEmail}
+                    title='Click to copy email'
+                >
                     <MdEmail className='text-xl' />
                     <span>duchuytv2102@gmail.com</span>
                 </div>

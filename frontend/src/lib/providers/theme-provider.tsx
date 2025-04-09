@@ -5,6 +5,7 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { useRef } from 'react';
 import { Provider } from 'react-redux';
 import { makeStore, AppStore } from '../redux/store';
+import { ToastContainer } from 'react-toastify';
 
 export function ThemeProvider({
     children,
@@ -24,6 +25,18 @@ export function ThemeProvider({
     return (
         <NextThemesProvider {...props}>
             <Provider store={storeRef.current}>{children}</Provider>
+            <ToastContainer
+                position='bottom-right'
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme='light'
+            />
         </NextThemesProvider>
     );
 }
