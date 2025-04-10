@@ -2,6 +2,7 @@ import ProductModel from '../models/product.model.js';
 import BrandModel from '../models/brand.model.js';
 import ProductVariantModel from '../models/productVariant.model.js';
 import sortProduct from '../utils/sortProduct.js';
+import mongoose from 'mongoose';
 
 // get all products
 export const getAllProducts = async (req, res) => {
@@ -34,7 +35,6 @@ export const getAllProducts = async (req, res) => {
         if (waterResistance) filterQuery.waterResistance = waterResistance;
         if (caseMaterial) filterQuery.caseMaterial = caseMaterial;
         if (dialColor) filterQuery.dialColor = dialColor;
-        if (tag) filterQuery.tags = tag;
 
         const skip = (page - 1) * limit;
 
@@ -47,6 +47,12 @@ export const getAllProducts = async (req, res) => {
             .limit(parseInt(limit))
             .populate('brandId', 'name')
             .populate('variants');
+
+        if (!products) {
+            return res
+                .status(404)
+                .json({ success: false, message: 'Do not have products in database !!!' });
+        }
 
         res.status(200).json({
             success: true,
@@ -65,4 +71,31 @@ export const getAllProducts = async (req, res) => {
 };
 
 // get product by id (using params)
-export const getProductById = async (req, res) => {};
+export const getProductById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, message: 'Invalid product ID' });
+        }
+
+        const product = await ProductModel.findById(id)
+            .populate('brandId', 'name')
+            .populate('variants');
+
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found !!!' });
+        }
+
+        res.status(200).json({
+            success: true,
+            product,
+        });
+    } catch (error) {
+        console.log('Error in getProductById controller', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error in getProductById controller',
+        });
+    }
+};

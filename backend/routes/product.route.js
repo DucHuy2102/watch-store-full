@@ -7,16 +7,6 @@ const router = express.Router();
 router.get('/', getAllProducts);
 
 // get product by id (using params)
-router.get('/products/:id', getProductById);
-
-// router.post('/verify-email', verifyEmail);
-
-// router.post('/sign-in', signin);
-
-// router.post('/sign-out', signout);
-
-// router.post('/forgot-password', forgotPassword);
-
-// router.post('/reset-password/:code', resetPassword);
+router.get('/:id', getProductById);
 
 export default router;
