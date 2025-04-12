@@ -5,3 +5,4 @@ export { default as Product_Grid } from './Product_Grid';
 export { default as Product_Breadcrumb } from './Product_Breadcrumb';
 export { default as Product_Sort } from './Product_Sort';
 export { default as Product_Filter } from './Product_Filter';
+export { default as LoadingComponent } from './Loading';

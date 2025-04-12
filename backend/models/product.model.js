@@ -39,12 +39,13 @@ const productSchema = new mongoose.Schema(
         strapMaterial: String,
         strapBuckle: String,
         batteryType: String,
+        gender: String,
 
         isSale: {
             type: Boolean,
             default: false,
         },
-        isNew: {
+        isNewArrival: {
             type: Boolean,
             default: false,
         },

@@ -11,14 +11,13 @@ export const getAllProducts = async (req, res) => {
             page = 1,
             limit = 12,
             sort = 'createdAt',
-            order = 'desc',
             search,
             brand,
             movementType,
             waterResistance,
             caseMaterial,
             dialColor,
-            tag,
+            gender,
         } = req.query;
 
         const filterQuery = {};
@@ -35,6 +34,8 @@ export const getAllProducts = async (req, res) => {
         if (waterResistance) filterQuery.waterResistance = waterResistance;
         if (caseMaterial) filterQuery.caseMaterial = caseMaterial;
         if (dialColor) filterQuery.dialColor = dialColor;
+        if (gender)
+            filterQuery.gender = gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
 
         const skip = (page - 1) * limit;
 

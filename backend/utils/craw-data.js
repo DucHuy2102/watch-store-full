@@ -50,8 +50,8 @@ function normalizeKey(key) {
 
 function extractNumber(text) {
     if (!text) return null;
-    const cleaned = text.replace(/[^\d.]/g, '');
-    const number = parseFloat(cleaned);
+    const cleaned = text.replace(/[^\d]/g, '');
+    const number = parseInt(cleaned, 10);
     return isNaN(number) ? null : number;
 }
 
@@ -114,8 +114,8 @@ async function runAll() {
             const raw = await crawlTimexProduct(page, url);
             console.log('🧩 Data:', raw.name);
             const isBestSeller = count % 2 === 0;
-            const isNew = count % 2 !== 0;
-            const isSale = !isNew;
+            const isNewArrival = count % 2 !== 0;
+            const isSale = !isNewArrival;
             const isLimitedEdition = false;
             count++;
 
@@ -139,7 +139,7 @@ async function runAll() {
                 strapBuckle: raw.specs['strap_buckle'] || '',
                 batteryType: raw.specs['battery_type'] || '',
                 isBestSeller,
-                isNew,
+                isNewArrival,
                 isSale,
                 isLimitedEdition,
             });
@@ -159,6 +159,7 @@ async function runAll() {
             });
 
             await variant.save();
+            savedProduct.defaultVariantId = variant._id;
             savedProduct.variants.push(variant._id);
             await savedProduct.save();
             console.log('✅ Variant saved:', variant._id);

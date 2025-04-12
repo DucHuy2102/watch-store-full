@@ -92,8 +92,8 @@ const UserDropdown = ({ user }: { user: IUser }) => {
     const handleLogout = async () => {
         try {
             await signOut();
-            dispatch(clearUser());
             toast.success('Logout successfully!');
+            dispatch(clearUser());
         } catch (error) {
             console.error('Logout error:', error);
             toast.error('Failed to logout. Please try again.');

@@ -1,56 +1,22 @@
 import { Product_Card } from '.';
+import { IProduct } from '@/lib/redux/interfaces/product.interface';
 
-export default function Product_Grid() {
+export default function Product_Grid({ products }: { products: IProduct[] }) {
     return (
         <div className='mt-5 grid grid-cols-3 gap-7'>
-            <Product_Card
-                id='1'
-                name='Marlin® Chronograph Tachymeter 40mm Leather Strap Watch'
-                price={6280000}
-                images={['/shop_now/men.webp', '/shop_now/girl.webp']}
-            />
-            <Product_Card
-                id='2'
-                name='Marlin® Chronograph Tachymeter 40mm Leather Strap Watch'
-                price={6280000}
-                images={['/shop_now/men.webp', '/shop_now/girl.webp']}
-            />
-            <Product_Card
-                id='3'
-                name='Marlin® Chronograph Tachymeter 40mm Leather Strap Watch'
-                price={6280000}
-                images={['/shop_now/men.webp', '/shop_now/girl.webp']}
-            />
-            <Product_Card
-                id='4'
-                name='Marlin® Chronograph Tachymeter 40mm Leather Strap Watch'
-                price={6280000}
-                images={['/shop_now/men.webp', '/shop_now/girl.webp']}
-            />
-            <Product_Card
-                id='5'
-                name='Marlin® Chronograph Tachymeter 40mm Leather Strap Watch'
-                price={6280000}
-                images={['/shop_now/men.webp', '/shop_now/girl.webp']}
-            />
-            <Product_Card
-                id='6'
-                name='Marlin® Chronograph Tachymeter 40mm Leather Strap Watch'
-                price={6280000}
-                images={['/shop_now/men.webp', '/shop_now/girl.webp']}
-            />
-            <Product_Card
-                id='7'
-                name='Marlin® Chronograph Tachymeter 40mm Leather Strap Watch'
-                price={6280000}
-                images={['/shop_now/men.webp', '/shop_now/girl.webp']}
-            />
-            <Product_Card
-                id='8'
-                name='Marlin® Chronograph Tachymeter 40mm Leather Strap Watch'
-                price={6280000}
-                images={['/shop_now/men.webp', '/shop_now/girl.webp']}
-            />
+            {products?.map((p, index) => {
+                const defaultVariant =
+                    p.variants.find((v) => v._id === p.defaultVariantId) || p.variants[0];
+                return (
+                    <Product_Card
+                        key={index}
+                        id={p._id}
+                        name={p.name}
+                        price={defaultVariant.sellPrice}
+                        images={defaultVariant.images.slice(0, 3)}
+                    />
+                );
+            })}
         </div>
     );
 }
