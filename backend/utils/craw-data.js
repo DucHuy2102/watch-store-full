@@ -44,10 +44,6 @@ const urls = [
     'https://timex.com/products/expedition-gmt-titanium-automatic-41mm-silicone-strap-watch-tw2w53000',
 ];
 
-function normalizeKey(key) {
-    return key.replace(/:/g, '').replace(/\//g, '').replace(/\s+/g, '_').toLowerCase();
-}
-
 function extractNumber(text) {
     if (!text) return null;
     const cleaned = text.replace(/[^\d]/g, '');
@@ -104,8 +100,7 @@ async function runAll() {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
-    const brandId = '67f370c48fa29ba42e4262e7';
-    const brandName = 'Automatic';
+    const watchStyle = 'Automatic';
     let count = 0;
 
     for (const url of urls) {
@@ -120,10 +115,9 @@ async function runAll() {
             count++;
 
             const product = new ProductModel({
-                brandId,
-                brandName,
                 name: raw.name,
                 description: raw.description,
+                watchStyle,
                 movementType: raw.specs['watch_movement'] || '',
                 waterResistance: raw.specs['water_resistance'] || '',
                 crystalLens: raw.specs['crystal_lens'] || '',
@@ -142,6 +136,10 @@ async function runAll() {
                 isNewArrival,
                 isSale,
                 isLimitedEdition,
+                sellPrice: extractNumber(raw.sellPrice),
+                originPrice: extractNumber(raw.originPrice) ?? extractNumber(raw.sellPrice),
+                rating: count + 2,
+                totalSold: count,
             });
 
             const savedProduct = await product.save();

@@ -1,5 +1,4 @@
 import ProductModel from '../models/product.model.js';
-import BrandModel from '../models/brand.model.js';
 import ProductVariantModel from '../models/productVariant.model.js';
 import sortProduct from '../utils/sortProduct.js';
 import mongoose from 'mongoose';
@@ -12,12 +11,13 @@ export const getAllProducts = async (req, res) => {
             limit = 12,
             sort = 'createdAt',
             search,
-            brand,
+            stockStatus,
             movementType,
+            caseDiameter,
+            strapLugWidth,
+            strapMaterial,
             waterResistance,
-            caseMaterial,
-            dialColor,
-            gender,
+            crystalLens,
         } = req.query;
 
         const filterQuery = {};
@@ -29,16 +29,35 @@ export const getAllProducts = async (req, res) => {
             ];
         }
 
-        if (brand) filterQuery.brandId = brand;
-        if (movementType) filterQuery.movementType = movementType;
-        if (waterResistance) filterQuery.waterResistance = waterResistance;
-        if (caseMaterial) filterQuery.caseMaterial = caseMaterial;
-        if (dialColor) filterQuery.dialColor = dialColor;
-        if (gender)
-            filterQuery.gender = gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
+        const conditions = [];
+
+        // if (stockStatus) filterQuery.stockStatus = { $in: stockStatus.split(',') };
+        if (movementType) conditions.push({ movementType: { $in: movementType.split(',') } });
+        if (caseDiameter) {
+            const diameters = caseDiameter.split(',');
+            const diameterConditions = diameters.map((range) => {
+                if (range.includes('-')) {
+                    const [min, max] = range.split('-').map(Number);
+                    return { caseDiameter: { $gte: min, $lte: max } };
+                }
+                if (range === '29') return { caseDiameter: { $lte: 29 } };
+                if (range === '44') return { caseDiameter: { $gte: 44 } };
+                return { caseDiameter: Number(range) };
+            });
+            conditions.push({ $or: diameterConditions });
+        }
+
+        if (strapLugWidth) conditions.push({ strapLugWidth: { $in: strapLugWidth.split(',') } });
+        if (strapMaterial) conditions.push({ strapMaterial: { $in: strapMaterial.split(',') } });
+        if (waterResistance)
+            conditions.push({ waterResistance: { $in: waterResistance.split(',') } });
+        if (crystalLens) conditions.push({ crystalLens: { $in: crystalLens.split(',') } });
+
+        if (conditions.length > 0) {
+            filterQuery.$and = conditions;
+        }
 
         const skip = (page - 1) * limit;
-
         const totalProducts = await ProductModel.countDocuments(filterQuery);
 
         const { sortField, sortOrder } = sortProduct(sort);

@@ -28,45 +28,10 @@ import { useCopyToClipboard } from '@uidotdev/usehooks';
 
 export default function Navbar() {
     const { user } = useSelector((state: RootState) => state.auth);
-    const [copiedText, copyToClipboard] = useCopyToClipboard();
-
-    const handleCopyEmail = async () => {
-        const email = 'duchuytv2102@gmail.com';
-        try {
-            await copyToClipboard(email);
-            toast.success('Email copied to clipboard!');
-        } catch (error) {
-            toast.error('Please try again later !!!');
-        }
-    };
 
     return (
         <div className='flex flex-col items-center justify-between'>
-            <div
-                className='px-10 py-1 md:px-20 w-full flex justify-between items-center font-mono text-sm md:text-base 
-            bg-zinc-100/50 dark:bg-zinc-800/50 backdrop-blur-md'
-            >
-                <div className='flex items-center gap-2'>
-                    <FaPhoneAlt />
-                    <span>0394 849 668</span>
-                </div>
-                <div className='flex items-center gap-2'>
-                    <MdLocalShipping className='text-xl' />
-                    <span>Free Shipping in VietNam</span>
-                </div>
-                <div className='flex items-center gap-2'>
-                    <IoShieldCheckmark className='text-lg' />
-                    <span>Lifetime warranty</span>
-                </div>
-                <div
-                    className='flex items-center gap-2 cursor-pointer'
-                    onClick={handleCopyEmail}
-                    title='Click to copy email'
-                >
-                    <MdEmail className='text-xl' />
-                    <span>duchuytv2102@gmail.com</span>
-                </div>
-            </div>
+            <TopNav />
             <div className='px-10 py-3 md:px-20 w-full flex justify-between items-center'>
                 <LogoApp />
                 <Search />
@@ -85,6 +50,48 @@ export default function Navbar() {
         </div>
     );
 }
+
+const TopNav = () => {
+    const [copiedText, copyToClipboard] = useCopyToClipboard();
+
+    const handleCopyEmail = async () => {
+        const email = 'duchuytv2102@gmail.com';
+        try {
+            await copyToClipboard(email);
+            toast.success('Email copied to clipboard!');
+        } catch (error) {
+            toast.error('Please try again later !!!');
+        }
+    };
+
+    return (
+        <div
+            className='px-10 py-1 md:px-20 w-full flex justify-between items-center font-mono text-sm md:text-base 
+bg-zinc-100/50 dark:bg-zinc-800/50 backdrop-blur-md'
+        >
+            <div className='flex items-center gap-2'>
+                <FaPhoneAlt />
+                <span>0394 849 668</span>
+            </div>
+            <div className='flex items-center gap-2'>
+                <MdLocalShipping className='text-xl' />
+                <span>Free Shipping in VietNam</span>
+            </div>
+            <div className='flex items-center gap-2'>
+                <IoShieldCheckmark className='text-lg' />
+                <span>Lifetime warranty</span>
+            </div>
+            <div
+                className='flex items-center gap-2 cursor-pointer'
+                onClick={handleCopyEmail}
+                title='Click to copy email'
+            >
+                <MdEmail className='text-xl' />
+                <span>duchuytv2102@gmail.com</span>
+            </div>
+        </div>
+    );
+};
 
 const UserDropdown = ({ user }: { user: IUser }) => {
     const dispatch = useDispatch();

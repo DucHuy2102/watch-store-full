@@ -30,3 +30,21 @@ export interface IProduct {
     isBestSeller: boolean;
     isLimitedEdition: boolean;
 }
+
+export interface IProductSortFilter {
+    sort?: string;
+    onSortChange?: (value: string) => void;
+    filters: Record<string, string>;
+    onFilterChange: (filterState: Record<string, string[]>) => void;
+}
+
+export interface IProductFilterState {
+    stockStatus: string[];
+    movementType: string[];
+    caseDiameter: string[];
+    strapLugWidth: string[];
+    features: string[];
+    strapMaterial: string[];
+    waterResistance: string[];
+    crystalLens: string[];
+}

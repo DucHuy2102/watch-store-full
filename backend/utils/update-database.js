@@ -1,59 +1,10 @@
 import dotenv from 'dotenv';
 import connectDatabase from '../database/connect_Database.js';
-import BrandModel from '../models/brand.model.js';
 import ProductModel from '../models/product.model.js';
 import ProductVariantModel from '../models/productVariant.model.js';
 import mongoose from 'mongoose';
 
 dotenv.config();
-
-// update brand field in ProductModel
-const createBrand = async () => {
-    await connectDatabase();
-
-    const menBrands = [
-        'Automatic',
-        'Chronograph',
-        'Digital Watches',
-        'Black Watches',
-        'Vintage',
-        'Stainlss Steel',
-        'Titanium',
-        'Leather',
-        'Military Inspired',
-        'Diver Inspired',
-    ];
-
-    const womenBrands = ['Small', 'Gold-Tone', 'Digital', 'Bracelet', 'Silver-Tone'];
-
-    for (const brand of menBrands) {
-        const newBrand = new BrandModel({
-            name: brand,
-            gender: 'Men',
-            short_description: `Explore our ${brand} collection`,
-            description: `${brand} watches from various collections`,
-            logo: '',
-        });
-
-        await newBrand.save();
-        console.log('✅ Brand created successfully:', newBrand);
-    }
-
-    for (const brand of womenBrands) {
-        const newBrand = new BrandModel({
-            name: brand,
-            gender: 'Women',
-            short_description: `Explore our ${brand} collection`,
-            description: `${brand} watches from various collections`,
-            logo: '',
-        });
-
-        await newBrand.save();
-        console.log('✅ Brand created successfully:', newBrand);
-    }
-
-    process.exit(0);
-};
 
 // update rating field in ProductModel
 const updateProductRatings = async () => {
@@ -125,7 +76,6 @@ const updateProductGender = async () => {
     }
 };
 
-// createBrand();
 // updateProductRatings();
 // updateDefaultVariantId();
 // updateProductGender();

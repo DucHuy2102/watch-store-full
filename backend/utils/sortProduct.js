@@ -4,11 +4,11 @@ export default function sortProduct(sort) {
 
     switch (sort) {
         case 'price-low':
-            sortField = 'minPrice';
+            sortField = 'sellPrice';
             sortOrder = 1;
             break;
         case 'price-high':
-            sortField = 'maxPrice';
+            sortField = 'sellPrice';
             sortOrder = -1;
             break;
         case 'new':

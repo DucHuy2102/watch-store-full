@@ -1,5 +1,6 @@
 'use client';
 
+import { IProductSortFilter } from '@/lib/redux/interfaces/product.interface';
 import { useState, useRef, useEffect } from 'react';
 import { IoChevronDown, IoClose } from 'react-icons/io5';
 
@@ -37,11 +38,15 @@ const Options = ({ handleSelect }: OptionsProps) => {
     );
 };
 
-export default function Product_Sort() {
+export default function Product_Sort({
+    sort,
+    onSortChange,
+}: Pick<IProductSortFilter, 'sort' | 'onSortChange'>) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState<string>('');
     const dropdownRef = useRef<HTMLDivElement>(null);
 
+    // close the dropdown when clicking outside of the dropdown
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -53,9 +58,34 @@ export default function Product_Sort() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    // set the selected option when the sort prop changes
+    useEffect(() => {
+        if (!sort) {
+            setSelectedOption('');
+            return;
+        }
+        const option = sortOptions.find((opt) => opt.value === sort);
+        if (option) {
+            setSelectedOption(option.label);
+        }
+    }, [sort]);
+
+    // handle the selection of an option
     const handleSelect = (value: string, label: string) => {
         setSelectedOption(label);
-        setIsOpen(false);
+        if (onSortChange) {
+            onSortChange(value);
+        }
+        setTimeout(() => setIsOpen(false), 0);
+    };
+
+    // clear the selected option
+    const handleClear = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setSelectedOption('');
+        if (onSortChange) {
+            onSortChange('');
+        }
     };
 
     return (
@@ -65,14 +95,14 @@ export default function Product_Sort() {
                 className='w-[180px] px-3 py-2 text-sm border rounded-md bg-white dark:bg-zinc-950 
                 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-900'
             >
-                <span className='text-sm text-zinc-800 dark:text-zinc-200'>
+                <span className='text-sm font-medium text-zinc-800 dark:text-zinc-200'>
                     {selectedOption || 'Sort by'}
                 </span>
                 {selectedOption ? (
                     <div
                         className='p-1 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 cursor-pointer
                         flex items-center justify-center'
-                        onClick={() => setSelectedOption('')}
+                        onClick={handleClear}
                     >
                         <IoClose className='w-3 h-3' />
                     </div>
