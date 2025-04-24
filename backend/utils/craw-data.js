@@ -1,48 +1,45 @@
-/*
-    - 
-*/
-
 import puppeteer from 'puppeteer';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import connectDatabase from '../database/connect_Database.js';
 import ProductModel from '../models/product.model.js';
-import ProductVariantModel from '../models/productVariant.model.js';
+import {
+    Automatic_Link_Timex,
+    Chronograph_Link_Timex,
+    Stainless_Steel_Link_Timex,
+    Titanium_Link_Timex,
+    Digital_Link_Timex,
+    Leather_Link_Timex,
+    Black_Link_Timex,
+    Military_Link_Timex,
+    Vintage_Link_Timex,
+    Diver_Link_Timex,
+    Small_Link_Timex,
+    Bracelet_Link_Timex,
+    Gold_Link_Timex,
+    Silver_Link_Timex,
+    Digital_Female_Link_Timex,
+    Kids_Link_Timex,
+} from './link-timex.js';
 
 dotenv.config();
 
-const urls = [
-    'https://timex.com/products/m79-automatic-40mm-synthetic-rubber-strap-watch-tw2w47600',
-    'https://timex.com/products/waterbury-metropolitan-automatic-41mm-leather-strap-watch-tw2y23000',
-    'https://timex.com/products/waterbury-metropolitan-automatic-41mm-leather-strap-watch-tw2y22900',
-    'https://timex.com/products/mk1-automatic-40mm-fabric-strap-watch-tw2y11900',
-    'https://timex.com/products/timex-x-peanuts-marlin-automatic-75th-anniversary-edition-40mm-leather-strap-watch-tw2y10000',
-    'https://timex.com/products/marlin-automatic-40mm-stainless-steel-bracelet-watch-tw2w93200',
-    'https://timex.com/products/timex-marlin-automatic-x-peanuts-snoopy-flying-ace-40mm-leather-strap-watch-tw2w49600',
-    'https://timex.com/products/marlin-automatic-40mm-leather-strap-watch-tw2w93100',
-    'https://timex.com/products/giorgio-galli-s2ti-swiss-made-automatic-38mm-tw2y27500',
-    'https://timex.com/products/expedition-titanium-automatic-41mm-eco-friendly-leather-strap-watch-tw2v54000',
-    'https://timex.com/products/m79-automatic-x-peanuts-40mm-stainless-steel-bracelet-watch-tw2w47500',
-    'https://timex.com/products/timex-x-peanuts-marlin-automatic-saxophonist-40mm-leather-strap-watch-tw2w68800',
-    'https://timex.com/products/marlin-jet-automatic-38mm-fabric-strap-watch-tw2y06300',
-    'https://timex.com/products/marlin-automatic-40mm-leather-strap-watch-twh6z4610',
-    'https://timex.com/products/marlin-automatic-40mm-leather-strap-watch-tw2w59700',
-    'https://timex.com/products/marlin-automatic-40mm-stainless-steel-bracelet-watch-tw2w59200',
-    'https://timex.com/products/marlin-automatic-40mm-leather-strap-watch-tw2v44500',
-    'https://timex.com/products/marlin-automatic-40mm-fabric-strap-watch-twh6z4710',
-    'https://timex.com/products/harborside-coast-automatic-43mm-stainless-steel-bracelet-watch-tw2v72100',
-    'https://timex.com/products/marlin-automatic-39mm-stainless-steel-bracelet-watch-tw2w58800',
-    'https://timex.com/products/marlin-automatic-40mm-leather-strap-watch-tw2v44600',
-    'https://timex.com/products/deepwater-reef-200-titanium-automatic-41mm-synthetic-rubber-strap-watch-tw2w73800',
-    'https://timex.com/products/mk1-automatic-40mm-fabric-strap-watch-tw2y07800',
-    'https://timex.com/products/timex-automatic-1983-e-line-34mm-leather-strap-watch-tw2y07500',
-    'https://timex.com/products/timex-automatic-1983-e-line-34mm-stainless-steel-expansion-band-watch-tw2y07400',
-    'https://timex.com/products/timex-automatic-1983-e-line-34mm-stainless-steel-expansion-band-watch-tw2y07300',
-    'https://timex.com/products/timex-automatic-1983-e-line-34mm-gold-tone-expansion-band-watch-tw2y07200',
-    'https://timex.com/products/marlin-jet-automatic-38mm-fabric-strap-watch-tw2y06400',
-    'https://timex.com/products/timex-automatic-1983-e-line-reissue-34mm-stainless-steel-expansion-band-watch-tw2w70800',
-    'https://timex.com/products/expedition-gmt-titanium-automatic-41mm-silicone-strap-watch-tw2w53000',
-];
+// const urls = Automatic_Link_Timex;
+// const urls = Stainless_Steel_Link_Timex;
+// const urls = Chronograph_Link_Timex;
+// const urls = Titanium_Link_Timex;
+// const urls = Digital_Link_Timex;
+// const urls = Leather_Link_Timex;
+// const urls = Black_Link_Timex;
+// const urls = Military_Link_Timex;
+// const urls = Vintage_Link_Timex;
+// const urls = Diver_Link_Timex;
+// const urls = Small_Link_Timex;
+// const urls = Bracelet_Link_Timex;
+// const urls = Gold_Link_Timex;
+// const urls = Silver_Link_Timex;
+// const urls = Digital_Female_Link_Timex;
+const urls = Kids_Link_Timex;
 
 function extractNumber(text) {
     if (!text) return null;
@@ -100,12 +97,15 @@ async function runAll() {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
-    const watchStyle = 'Automatic';
+    const watchStyle = 'Digital';
+    const gender = 'Kid';
+    const fallBack_Description =
+        'Discover timeless craftsmanship and contemporary design in perfect harmony. This watch embodies the enduring spirit of classic timepieces while embracing modern innovation. Housed within a robust stainless-steel case and adorned with a refined dial, it offers reliable precision through its automatic movement, powered by your motion. A thoughtfully designed strap complements its bold yet sophisticated aesthetic, making it a versatile companion for both everyday wear and special occasions. Meticulously crafted to stand the test of time, this watch is more than an accessory — it’s a statement of character and enduring style.';
     let count = 0;
 
     for (const url of urls) {
         try {
-            console.log(`🌐 Crawling: ${url}`);
+            console.log(`\n🌐 Crawling: ${url}`);
             const raw = await crawlTimexProduct(page, url);
             console.log('🧩 Data:', raw.name);
             const isBestSeller = count % 2 === 0;
@@ -116,51 +116,44 @@ async function runAll() {
 
             const product = new ProductModel({
                 name: raw.name,
-                description: raw.description,
+                description: raw.description || fallBack_Description,
                 watchStyle,
-                movementType: raw.specs['watch_movement'] || '',
-                waterResistance: raw.specs['water_resistance'] || '',
-                crystalLens: raw.specs['crystal_lens'] || '',
-                caseDiameter: extractNumber(raw.specs['case_diameter']),
-                caseHeight: extractNumber(raw.specs['case_height']),
-                caseMaterial: raw.specs['case_material'] || '',
-                caseColor: raw.specs['case_color'] || '',
-                caseFinish: raw.specs['case_finish'] || '',
-                dialColor: raw.specs['dial_color'] || '',
-                dialMarkings: raw.specs['dial_markings'] || '',
-                strapLugWidth: extractNumber(raw.specs['strap_lug_width']),
-                strapMaterial: raw.specs['strap_material'] || '',
-                strapBuckle: raw.specs['strap_buckle'] || '',
-                batteryType: raw.specs['battery_type'] || '',
+                gender,
+                specifications: {
+                    movementType: raw.specs['watch_movement'] || '',
+                    waterResistance: raw.specs['water_resistance'] || '',
+                    crystalLens: raw.specs['crystal_lens'] || '',
+                    caseDiameter: extractNumber(raw.specs['case_diameter']),
+                    caseHeight: extractNumber(raw.specs['case_height']),
+                    caseMaterial: raw.specs['case_material'] || '',
+                    caseColor: raw.specs['case_color'] || '',
+                    caseFinish: raw.specs['case_finish'] || '',
+                    dialColor: raw.specs['dial_color'] || '',
+                    dialMarkings: raw.specs['dial_markings'] || '',
+                    strapLugWidth: extractNumber(raw.specs['strap_lug_width']),
+                    strapMaterial: raw.specs['strap_material'] || '',
+                    strapBuckle: raw.specs['strap_buckle'] || '',
+                    batteryType: raw.specs['battery_type'] || '',
+                },
+
+                variant: {
+                    color: raw.specs['strap_color'] || 'default',
+                    sellPrice: extractNumber(raw.sellPrice),
+                    originPrice: extractNumber(raw.originPrice) ?? extractNumber(raw.sellPrice),
+                    stock: 20,
+                    totalSold: count,
+                    rating: count + 2,
+                    images: raw.images,
+                },
+
                 isBestSeller,
                 isNewArrival,
                 isSale,
                 isLimitedEdition,
-                sellPrice: extractNumber(raw.sellPrice),
-                originPrice: extractNumber(raw.originPrice) ?? extractNumber(raw.sellPrice),
-                rating: count + 2,
-                totalSold: count,
             });
 
             const savedProduct = await product.save();
             console.log('✅ Product saved:', savedProduct._id);
-
-            const variant = new ProductVariantModel({
-                productId: savedProduct._id,
-                color: raw.specs['strap_color'] || 'default',
-                sellPrice: extractNumber(raw.sellPrice),
-                originPrice: extractNumber(raw.originPrice) ?? extractNumber(raw.sellPrice),
-                stock: 10,
-                sold: count,
-                rating: count + 2,
-                images: raw.images,
-            });
-
-            await variant.save();
-            savedProduct.defaultVariantId = variant._id;
-            savedProduct.variants.push(variant._id);
-            await savedProduct.save();
-            console.log('✅ Variant saved:', variant._id);
         } catch (err) {
             console.error(`❌ Error crawling ${url}:`, err);
         }
@@ -168,7 +161,7 @@ async function runAll() {
 
     await browser.close();
     await mongoose.disconnect();
-    console.log('🛑 Done.');
+    console.log('\n🛑 Done.');
 }
 
 runAll();

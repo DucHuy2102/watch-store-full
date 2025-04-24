@@ -1,5 +1,4 @@
 import ProductModel from '../models/product.model.js';
-import ProductVariantModel from '../models/productVariant.model.js';
 import sortProduct from '../utils/sortProduct.js';
 import mongoose from 'mongoose';
 
@@ -31,27 +30,45 @@ export const getAllProducts = async (req, res) => {
 
         const conditions = [];
 
-        // if (stockStatus) filterQuery.stockStatus = { $in: stockStatus.split(',') };
-        if (movementType) conditions.push({ movementType: { $in: movementType.split(',') } });
+        if (stockStatus) {
+            const statuses = stockStatus.split(',');
+            const stockConditions = statuses
+                .map((status) => {
+                    if (status === 'in-stock') return { 'variant.stock': { $gt: 0 } };
+                    if (status === 'out-of-stock') return { 'variant.stock': 0 };
+                    return null;
+                })
+                .filter(Boolean);
+            if (stockConditions.length > 0) {
+                conditions.push({ $or: stockConditions });
+            }
+        }
+        if (movementType)
+            conditions.push({ 'specifications.movementType': { $in: movementType.split(',') } });
         if (caseDiameter) {
             const diameters = caseDiameter.split(',');
             const diameterConditions = diameters.map((range) => {
                 if (range.includes('-')) {
                     const [min, max] = range.split('-').map(Number);
-                    return { caseDiameter: { $gte: min, $lte: max } };
+                    return { 'specifications.caseDiameter': { $gte: min, $lte: max } };
                 }
-                if (range === '29') return { caseDiameter: { $lte: 29 } };
-                if (range === '44') return { caseDiameter: { $gte: 44 } };
-                return { caseDiameter: Number(range) };
+                if (range === '29') return { 'specifications.caseDiameter': { $lte: 29 } };
+                if (range === '44') return { 'specifications.caseDiameter': { $gte: 44 } };
+                return { 'specifications.caseDiameter': Number(range) };
             });
             conditions.push({ $or: diameterConditions });
         }
 
-        if (strapLugWidth) conditions.push({ strapLugWidth: { $in: strapLugWidth.split(',') } });
-        if (strapMaterial) conditions.push({ strapMaterial: { $in: strapMaterial.split(',') } });
+        if (strapLugWidth)
+            conditions.push({ 'specifications.strapLugWidth': { $in: strapLugWidth.split(',') } });
+        if (strapMaterial)
+            conditions.push({ 'specifications.strapMaterial': { $in: strapMaterial.split(',') } });
         if (waterResistance)
-            conditions.push({ waterResistance: { $in: waterResistance.split(',') } });
-        if (crystalLens) conditions.push({ crystalLens: { $in: crystalLens.split(',') } });
+            conditions.push({
+                'specifications.waterResistance': { $in: waterResistance.split(',') },
+            });
+        if (crystalLens)
+            conditions.push({ 'specifications.crystalLens': { $in: crystalLens.split(',') } });
 
         if (conditions.length > 0) {
             filterQuery.$and = conditions;
@@ -65,8 +82,7 @@ export const getAllProducts = async (req, res) => {
             .sort({ [sortField]: sortOrder })
             .skip(skip)
             .limit(parseInt(limit))
-            .populate('brandId', 'name')
-            .populate('variants');
+            .populate('brandId', 'name');
 
         if (!products) {
             return res
@@ -99,9 +115,7 @@ export const getProductById = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid product ID' });
         }
 
-        const product = await ProductModel.findById(id)
-            .populate('brandId', 'name')
-            .populate('variants');
+        const product = await ProductModel.findById(id).populate('brandId', 'name');
 
         if (!product) {
             return res.status(404).json({ success: false, message: 'Product not found !!!' });

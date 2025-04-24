@@ -1,7 +1,6 @@
 import dotenv from 'dotenv';
 import connectDatabase from '../database/connect_Database.js';
 import ProductModel from '../models/product.model.js';
-import ProductVariantModel from '../models/productVariant.model.js';
 import mongoose from 'mongoose';
 
 dotenv.config();

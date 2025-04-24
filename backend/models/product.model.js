@@ -2,16 +2,6 @@ import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema(
     {
-        variants: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'ProductVariant',
-            },
-        ],
-        defaultVariantId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'ProductVariant',
-        },
         name: {
             type: String,
             required: true,
@@ -20,22 +10,42 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+
         watchStyle: String,
-        movementType: String,
-        waterResistance: String,
-        crystalLens: String,
-        caseDiameter: Number,
-        caseHeight: Number,
-        caseMaterial: String,
-        caseColor: String,
-        caseFinish: String,
-        dialColor: String,
-        dialMarkings: String,
-        strapLugWidth: Number,
-        strapMaterial: String,
-        strapBuckle: String,
-        batteryType: String,
         gender: String,
+
+        specifications: {
+            movementType: String,
+            waterResistance: String,
+            crystalLens: String,
+            caseDiameter: Number,
+            caseHeight: Number,
+            caseMaterial: String,
+            caseColor: String,
+            caseFinish: String,
+            dialColor: String,
+            dialMarkings: String,
+            strapLugWidth: Number,
+            strapMaterial: String,
+            strapBuckle: String,
+            batteryType: String,
+        },
+
+        variant: {
+            color: String,
+            sellPrice: Number,
+            originPrice: Number,
+            stock: Number,
+            totalSold: {
+                type: Number,
+                default: 0,
+            },
+            rating: {
+                type: Number,
+                default: 0,
+            },
+            images: [String],
+        },
 
         isSale: {
             type: Boolean,
@@ -53,10 +63,6 @@ const productSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        sellPrice: Number,
-        originPrice: Number,
-        rating: Number,
-        totalSold: Number,
     },
     { timestamps: true }
 );
