@@ -64,9 +64,9 @@ const updateProductGender = async () => {
 
         for (const product of products) {
             await ProductModel.findByIdAndUpdate(product._id, {
-                gender: 'Male',
+                gender: 'Men',
             });
-            console.log(`✅ Updated gender 'Male' for product: ${product.name}`);
+            console.log(`✅ Updated gender 'Men' for product: ${product.name}`);
         }
     } catch (error) {
         console.error('❌ Error updating gender:', error);

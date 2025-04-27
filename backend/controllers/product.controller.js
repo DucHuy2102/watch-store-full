@@ -7,10 +7,11 @@ export const getAllProducts = async (req, res) => {
     try {
         const {
             page = 1,
-            limit = 12,
+            limit = 18,
             sort = 'createdAt',
             search,
             stockStatus,
+            gender,
             movementType,
             caseDiameter,
             strapLugWidth,
@@ -29,7 +30,6 @@ export const getAllProducts = async (req, res) => {
         }
 
         const conditions = [];
-
         if (stockStatus) {
             const statuses = stockStatus.split(',');
             const stockConditions = statuses
@@ -41,6 +41,13 @@ export const getAllProducts = async (req, res) => {
                 .filter(Boolean);
             if (stockConditions.length > 0) {
                 conditions.push({ $or: stockConditions });
+            }
+        }
+        if (gender) {
+            if (gender === 'Men' || gender === 'Women') {
+                conditions.push({ gender: gender });
+            } else {
+                conditions.push({ gender: 'Kid' });
             }
         }
         if (movementType)
@@ -74,15 +81,16 @@ export const getAllProducts = async (req, res) => {
             filterQuery.$and = conditions;
         }
 
-        const skip = (page - 1) * limit;
+        const pageNum = parseInt(page, 10) || 1;
+        const limitNum = parseInt(limit, 10) || 18;
+        const skip = (pageNum - 1) * limitNum;
         const totalProducts = await ProductModel.countDocuments(filterQuery);
 
         const { sortField, sortOrder } = sortProduct(sort);
         const products = await ProductModel.find(filterQuery)
             .sort({ [sortField]: sortOrder })
             .skip(skip)
-            .limit(parseInt(limit))
-            .populate('brandId', 'name');
+            .limit(limitNum);
 
         if (!products) {
             return res
@@ -93,8 +101,8 @@ export const getAllProducts = async (req, res) => {
         res.status(200).json({
             success: true,
             totalProducts,
-            currentPage: parseInt(page),
-            totalPages: Math.ceil(totalProducts / limit),
+            currentPage: pageNum,
+            totalPages: Math.ceil(totalProducts / limitNum),
             products,
         });
     } catch (error) {

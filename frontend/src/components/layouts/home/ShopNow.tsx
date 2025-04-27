@@ -1,12 +1,19 @@
+'use client';
+
 import Image from 'next/image';
-import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function ShopNow() {
+    const router = useRouter();
+    const handleClick = (gender: string) => {
+        router.push(`/products?gender=${gender}`);
+    };
+
     return (
         <section className='container mx-auto mt-10'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-                <Link href='/products/men' className='group relative overflow-hidden rounded-2xl'>
+                <div className='group relative overflow-hidden rounded-2xl'>
                     <div className='aspect-[4/5] relative'>
                         <Image
                             src='/shop_now/men.webp'
@@ -23,17 +30,18 @@ export default function ShopNow() {
                                 Men's Best Sellers
                             </h3>
                             <div
+                                onClick={() => handleClick('Men')}
                                 className='inline-flex items-center text-white font-medium border border-white/30 px-6 py-2 rounded-full
-                                group-hover:bg-white group-hover:text-black transition-all duration-300 gap-2'
+                                group-hover:bg-white group-hover:text-black transition-all duration-300 gap-2 cursor-pointer'
                             >
                                 Shop Now
                                 <ArrowRight className='w-4 h-4 group-hover:translate-x-1 transition-transform' />
                             </div>
                         </div>
                     </div>
-                </Link>
+                </div>
 
-                <Link href='/products/women' className='group relative overflow-hidden rounded-2xl'>
+                <div className='group relative overflow-hidden rounded-2xl'>
                     <div className='aspect-[4/5] relative'>
                         <Image
                             src='/shop_now/girl.webp'
@@ -50,15 +58,16 @@ export default function ShopNow() {
                                 Women's Best Sellers
                             </h3>
                             <div
+                                onClick={() => handleClick('Women')}
                                 className='inline-flex items-center text-white font-medium border border-white/30 px-6 py-2 rounded-full
-                                group-hover:bg-white group-hover:text-black transition-all duration-300 gap-2'
+                                group-hover:bg-white group-hover:text-black transition-all duration-300 gap-2 cursor-pointer'
                             >
                                 Shop Now
                                 <ArrowRight className='w-4 h-4 group-hover:translate-x-1 transition-transform' />
                             </div>
                         </div>
                     </div>
-                </Link>
+                </div>
             </div>
         </section>
     );

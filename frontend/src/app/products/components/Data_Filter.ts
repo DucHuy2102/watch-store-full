@@ -1,6 +1,6 @@
 export const Data_StockStatus = [
-    { key: 'in stock', label: 'In Stock' },
-    { key: 'out of stock', label: 'Out of Stock' },
+    { key: 'in-stock', label: 'In Stock' },
+    { key: 'out-of-stock', label: 'Out of Stock' },
 ];
 export const Data_MovementType = [
     { key: 'Mechanical Automatic', label: 'Automatic' },

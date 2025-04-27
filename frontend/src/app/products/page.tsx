@@ -10,11 +10,14 @@ import {
 } from './components';
 import { getAllProducts } from '@/api/product';
 import { IProduct } from '@/lib/redux/interfaces/product.interface';
+import { useSearchParams } from 'next/navigation';
 
 export default function Products() {
+    const searchParams = useSearchParams();
     const [products, setProducts] = useState<IProduct[]>([]);
     const [sort, setSort] = useState('');
     const [filters, setFilters] = useState<Record<string, string>>({
+        gender: '',
         stockStatus: '',
         movementType: '',
         caseDiameter: '',
@@ -31,100 +34,85 @@ export default function Products() {
     });
     const [isLoading, setIsLoading] = useState(false);
 
-    // get all products from api
-    // with query params: sort, filters, pagination
-    const getProducts = async () => {
-        try {
-            setIsLoading(true);
-
-            const queryParams = new URLSearchParams();
-            if (sort) queryParams.append('sort', sort);
-
-            Object.keys(filters).forEach((key) => {
-                if (filters[key]) {
-                    queryParams.append(key, filters[key]);
-                }
-            });
-
-            if (pagination) queryParams.append('pagination', JSON.stringify(pagination));
-            const res = await getAllProducts(queryParams.toString());
-            const { totalProducts, currentPage, totalPages, products } = res;
-            setProducts(products);
-            setPagination({ totalProducts, currentPage, totalPages });
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    // get sort, filters, pagination from query params
-    // and set them to state on first render and on every change
     useEffect(() => {
-        const queryParams = new URLSearchParams(window.location.search);
-
-        // get sort from query params
-        const currentSort = queryParams.get('sort');
-        if (currentSort && currentSort !== sort) {
-            setSort(currentSort);
-        }
-
-        // get filters from query params
-        const newFilters = { ...filters };
-        Object.keys(filters).forEach((key) => {
-            const value = queryParams.get(key);
-            if (value) {
-                newFilters[key] = value;
-            }
+        const newFilters: Record<string, string> = { ...filters };
+        Object.keys(newFilters).forEach((key) => {
+            newFilters[key] = searchParams.get(key) || '';
         });
 
-        if (JSON.stringify(newFilters) !== JSON.stringify(filters)) {
-            setFilters(newFilters);
-        }
+        const sortValue = searchParams.get('sort') || '';
+        const currentPage = parseInt(searchParams.get('page') || '1', 10);
 
-        // get pagination from query params
-        const currentPage = queryParams.get('page');
-        if (currentPage) {
-            setPagination((prev) => ({
-                ...prev,
-                currentPage: parseInt(currentPage, 10),
-            }));
-        }
-    }, []);
+        setFilters(newFilters);
+        setSort(sortValue);
+        setPagination((prev) => ({
+            ...prev,
+            currentPage,
+        }));
 
-    // get products from api on sort, filters, pagination change
-    useEffect(() => {
-        getProducts();
-    }, [sort, filters, pagination.currentPage]);
+        const getProductsData = async () => {
+            try {
+                setIsLoading(true);
+                const queryParams = new URLSearchParams();
+
+                if (sortValue) queryParams.append('sort', sortValue);
+                Object.keys(newFilters).forEach((key) => {
+                    if (newFilters[key]) {
+                        queryParams.append(key, newFilters[key]);
+                    }
+                });
+                queryParams.append('page', currentPage.toString());
+
+                const res = await getAllProducts(queryParams.toString());
+                const { totalProducts, currentPage: resPage, totalPages, products } = res;
+                setProducts(products);
+                setPagination({
+                    totalProducts,
+                    currentPage: resPage,
+                    totalPages,
+                });
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        getProductsData();
+    }, [searchParams]);
 
     // sort function
     const handleSortChange = (value: string) => {
-        setSort(value);
         const url = new URL(window.location.href);
         if (value) {
             url.searchParams.set('sort', value);
         } else {
             url.searchParams.delete('sort');
         }
+        url.searchParams.delete('page');
         window.history.pushState({}, '', url);
     };
 
     // filter function
     const handleFilterChange = (filterState: Record<string, string[]>) => {
-        const newFilters: Record<string, string> = {};
-        Object.entries(filterState).forEach(([key, values]) => {
-            newFilters[key] = values.length > 0 ? values.join(',') : '';
-        });
-        setFilters(newFilters);
-
         const url = new URL(window.location.href);
-        Object.entries(newFilters).forEach(([key, value]) => {
+        Object.entries(filterState).forEach(([key, value]) => {
             if (value) {
-                url.searchParams.set(key, value);
+                url.searchParams.set(key, value.join(','));
             } else {
                 url.searchParams.delete(key);
             }
         });
+        url.searchParams.delete('page');
+        window.history.pushState({}, '', url);
+    };
+
+    // pagination function
+    const handlePageChange = (page: number) => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', page.toString());
         window.history.pushState({}, '', url);
     };
 
@@ -151,7 +139,7 @@ export default function Products() {
                             <Product_Grid products={products} />
 
                             {/* pagination */}
-                            <Product_Pagination />
+                            <Product_Pagination {...pagination} onPageChange={handlePageChange} />
                         </main>
                     ) : (
                         <Product_Empty />

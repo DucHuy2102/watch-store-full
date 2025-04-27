@@ -5,15 +5,13 @@ export default function Product_Grid({ products }: { products: IProduct[] }) {
     return (
         <div className='mt-5 grid grid-cols-3 gap-7'>
             {products?.map((p, index) => {
-                const defaultVariant =
-                    p.variants.find((v) => v._id === p.defaultVariantId) || p.variants[0];
                 return (
                     <Product_Card
                         key={index}
                         id={p._id}
                         name={p.name}
-                        price={defaultVariant.sellPrice}
-                        images={defaultVariant.images.slice(0, 3)}
+                        price={p.variant.sellPrice}
+                        images={p.variant.images.slice(0, 3)}
                     />
                 );
             })}

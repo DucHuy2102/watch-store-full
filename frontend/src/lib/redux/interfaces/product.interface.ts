@@ -4,29 +4,39 @@ export interface IProductVariant {
     sellPrice: number;
     originPrice: number;
     stock: number;
-    sold: number;
+    totalSold: number;
     rating: number;
     images: string[];
 }
 
-export interface IBrand {
+export interface ISpecifications {
     _id: string;
-    name: string;
+    movementType: string;
+    waterResistance: string;
+    crystalLens: string;
+    caseDiameter: number;
+    caseHeight: number;
+    caseMaterial: string;
+    caseColor: string;
+    caseFinish: string;
+    dialColor: string;
+    dialMarkings: string;
+    strapLugWidth: number;
+    strapMaterial: string;
+    strapBuckle: string;
+    batteryType: string;
 }
 
 export interface IProduct {
     _id: string;
     name: string;
     description: string;
-    brandId: IBrand;
-    variants: IProductVariant[];
-    defaultVariantId: string;
-    minPrice: number;
-    maxPrice: number;
-    rating: number;
-    totalSold: number;
+    watchStyle: string;
+    gender: string;
+    specifications: ISpecifications;
+    variant: IProductVariant;
     isSale: boolean;
-    isNew: boolean;
+    isNewArrival: boolean;
     isBestSeller: boolean;
     isLimitedEdition: boolean;
 }
