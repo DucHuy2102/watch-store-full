@@ -10,6 +10,7 @@ export const getAllProducts = async (req, res) => {
             limit = 18,
             sort = 'createdAt',
             search,
+            style,
             stockStatus,
             gender,
             movementType,
@@ -30,6 +31,9 @@ export const getAllProducts = async (req, res) => {
         }
 
         const conditions = [];
+        if (style) {
+            conditions.push({ watchStyle: { $regex: style, $options: 'i' } });
+        }
         if (stockStatus) {
             const statuses = stockStatus.split(',');
             const stockConditions = statuses

@@ -18,6 +18,7 @@ export default function Products() {
     const [sort, setSort] = useState('');
     const [filters, setFilters] = useState<Record<string, string>>({
         gender: '',
+        style: '',
         stockStatus: '',
         movementType: '',
         caseDiameter: '',
@@ -40,6 +41,7 @@ export default function Products() {
             newFilters[key] = searchParams.get(key) || '';
         });
 
+        const styleValue = searchParams.get('style') || '';
         const sortValue = searchParams.get('sort') || '';
         const currentPage = parseInt(searchParams.get('page') || '1', 10);
 
@@ -56,9 +58,10 @@ export default function Products() {
                 const queryParams = new URLSearchParams();
 
                 if (sortValue) queryParams.append('sort', sortValue);
+                if (styleValue) queryParams.set('style', styleValue);
                 Object.keys(newFilters).forEach((key) => {
                     if (newFilters[key]) {
-                        queryParams.append(key, newFilters[key]);
+                        queryParams.set(key, newFilters[key]);
                     }
                 });
                 queryParams.append('page', currentPage.toString());
@@ -99,7 +102,7 @@ export default function Products() {
     const handleFilterChange = (filterState: Record<string, string[]>) => {
         const url = new URL(window.location.href);
         Object.entries(filterState).forEach(([key, value]) => {
-            if (value) {
+            if (value && value.length > 0) {
                 url.searchParams.set(key, value.join(','));
             } else {
                 url.searchParams.delete(key);
