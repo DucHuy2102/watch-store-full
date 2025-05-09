@@ -60,6 +60,6 @@ export const Women_WatchStyle: { img: string; watchType: string }[] = [
     },
     {
         img: 'https://timex.com/cdn/shop/files/Womens-Digital_Nav_icon_image_TW2V74400.png?v=1722370017',
-        watchType: 'Digital',
+        watchType: 'Digital Watches',
     },
 ];

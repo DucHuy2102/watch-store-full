@@ -3,7 +3,7 @@ import { IProduct } from '@/lib/redux/interfaces/product.interface';
 
 export default function Product_Grid({ products }: { products: IProduct[] }) {
     return (
-        <div className='mt-5 grid grid-cols-3 gap-7'>
+        <div className='mt-5 grid grid-cols-3 lg:gap-7 2xl:gap-10'>
             {products?.map((p, index) => {
                 return (
                     <Product_Card

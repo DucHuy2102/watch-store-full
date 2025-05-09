@@ -7,6 +7,8 @@ export interface IProductVariant {
     totalSold: number;
     rating: number;
     images: string[];
+    thumbnail: string;
+    sub_image: string;
 }
 
 export interface ISpecifications {
@@ -37,8 +39,8 @@ export interface IProduct {
     variant: IProductVariant;
     isSale: boolean;
     isNewArrival: boolean;
-    isBestSeller: boolean;
     isLimitedEdition: boolean;
+    isBestSeller: boolean;
 }
 
 export interface IProductSortFilter {

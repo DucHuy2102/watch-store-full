@@ -1,15 +1,30 @@
+'use client';
+
 import { FaGithub, FaFacebookF } from 'react-icons/fa';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import LogoApp from './custom/LogoApp';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const GITHUB_LINK = process.env.NEXT_PUBLIC_GITHUB_LINK;
 const FACEBOOK_LINK = process.env.NEXT_PUBLIC_FACEBOOK_LINK;
 
 export default function Footer() {
+    const [isHiddenURL, setIsHiddenURL] = useState(false);
+    const pathName = usePathname();
+    useEffect(() => {
+        const isProductDetail = /^\/products\/[^/]+$/.test(pathName);
+        setIsHiddenURL(!isProductDetail);
+    }, [pathName]);
+
     return (
-        <footer className='px-10 py-8 md:px-20 bg-zinc-950 mt-auto rounded-tl-[100px]'>
+        <footer
+            className={`px-10 py-8 md:px-20 bg-zinc-950 mt-auto ${
+                isHiddenURL ? 'rounded-tl-[100px]' : 'rounded-tl-none'
+            }`}
+        >
             <div className='max-w-7xl mx-auto'>
                 <div className='grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-zinc-800'>
                     <div className='space-y-4'>

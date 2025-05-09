@@ -45,6 +45,8 @@ const productSchema = new mongoose.Schema(
                 default: 0,
             },
             images: [String],
+            thumbnail: String,
+            sub_image: String,
         },
 
         isSale: {

@@ -18,7 +18,7 @@ import {
     Bracelet_Link_Timex,
     Gold_Link_Timex,
     Silver_Link_Timex,
-    Digital_Female_Link_Timex,
+    Digital_Women_Link_Timex,
     Kids_Link_Timex,
 } from './link-timex.js';
 
@@ -38,7 +38,7 @@ dotenv.config();
 // const urls = Bracelet_Link_Timex;
 // const urls = Gold_Link_Timex;
 // const urls = Silver_Link_Timex;
-// const urls = Digital_Female_Link_Timex;
+// const urls = Digital_Women_Link_Timex;
 const urls = Kids_Link_Timex;
 
 function extractNumber(text) {
@@ -87,8 +87,12 @@ async function crawlTimexProduct(page, url) {
                 return src?.startsWith('http') ? src : `https:${src}`;
             })
             .filter((url, i, self) => self.indexOf(url) === i && !url.includes('150x150'));
+        const thumbnailEl = document.querySelector('.product-details__bg-desktop img');
+        const subImageEl = document.querySelector('.product-gallery__featured-image-container img');
+        const thumbnail = thumbnailEl ? 'https:' + thumbnailEl.getAttribute('src') : null;
+        const subImage = subImageEl ? 'https:' + subImageEl.getAttribute('src') : null;
 
-        return { name, description, originPrice, sellPrice, images, specs };
+        return { name, description, originPrice, sellPrice, images, specs, thumbnail, subImage };
     });
 }
 
@@ -97,7 +101,7 @@ async function runAll() {
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
-    const watchStyle = 'Digital';
+    const watchStyle = 'Kid Watches';
     const gender = 'Kid';
     const fallBack_Description =
         'Discover timeless craftsmanship and contemporary design in perfect harmony. This watch embodies the enduring spirit of classic timepieces while embracing modern innovation. Housed within a robust stainless-steel case and adorned with a refined dial, it offers reliable precision through its automatic movement, powered by your motion. A thoughtfully designed strap complements its bold yet sophisticated aesthetic, making it a versatile companion for both everyday wear and special occasions. Meticulously crafted to stand the test of time, this watch is more than an accessory — it’s a statement of character and enduring style.';
@@ -144,6 +148,8 @@ async function runAll() {
                     totalSold: count,
                     rating: count + 2,
                     images: raw.images,
+                    thumbnail: raw.thumbnail,
+                    sub_image: raw.subImage,
                 },
 
                 isBestSeller,

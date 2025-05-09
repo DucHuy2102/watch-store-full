@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import {
     Product_Empty,
-    LoadingComponent,
     Product_Grid,
     Product_Pagination,
     Product_Sort_Filter,
+    Loading_ProductGrid,
 } from './components';
 import { getAllProducts } from '@/api/product';
 import { IProduct } from '@/lib/redux/interfaces/product.interface';
@@ -119,36 +119,32 @@ export default function Products() {
         window.history.pushState({}, '', url);
     };
 
+    if (isLoading) return <Loading_ProductGrid />;
+
     return (
-        <>
-            {isLoading ? (
-                <LoadingComponent />
-            ) : (
-                <div
-                    className='flex flex-col min-h-screen w-full overflow-hidden 
+        <div
+            className='flex flex-col min-h-screen w-full overflow-hidden 
                 px-5 md:px-10 py-1 md:py-3'
-                >
-                    {/* sort and filter */}
-                    <Product_Sort_Filter
-                        filters={filters}
-                        onFilterChange={handleFilterChange}
-                        sort={sort}
-                        onSortChange={handleSortChange}
-                    />
+        >
+            {/* sort and filter */}
+            <Product_Sort_Filter
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                sort={sort}
+                onSortChange={handleSortChange}
+            />
 
-                    {products?.length > 0 ? (
-                        <main className='flex-grow min-h-screen'>
-                            {/* products */}
-                            <Product_Grid products={products} />
+            {products?.length > 0 ? (
+                <main className='flex-grow min-h-screen'>
+                    {/* products */}
+                    <Product_Grid products={products} />
 
-                            {/* pagination */}
-                            <Product_Pagination {...pagination} onPageChange={handlePageChange} />
-                        </main>
-                    ) : (
-                        <Product_Empty />
-                    )}
-                </div>
+                    {/* pagination */}
+                    <Product_Pagination {...pagination} onPageChange={handlePageChange} />
+                </main>
+            ) : (
+                <Product_Empty />
             )}
-        </>
+        </div>
     );
 }

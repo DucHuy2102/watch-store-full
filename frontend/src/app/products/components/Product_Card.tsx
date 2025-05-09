@@ -31,6 +31,10 @@ export default function Product_Card({ id, name, price, images }: IProductCardPr
         }).format(price);
     };
 
+    const cleanImageUrl = (url: string) => {
+        return url.split('&width=')[0];
+    };
+
     return (
         <div className='group relative flex flex-col hover:scale-105 transition-all duration-300'>
             <div
@@ -50,11 +54,12 @@ export default function Product_Card({ id, name, price, images }: IProductCardPr
                             <CarouselItem key={index} className='relative aspect-square p-7'>
                                 <Link href={`/products/${id}`}>
                                     <Image
-                                        src={image}
+                                        // src={image}
+                                        src={cleanImageUrl(image)}
                                         alt={`${name} - Image ${index + 1}`}
                                         width={600}
                                         height={600}
-                                        className='object-contain w-full h-full rounded-lg'
+                                        className='object-contain w-full h-full rounded-lg lg:p-10 2xl:p-15'
                                         sizes='(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw'
                                         priority={index === 0}
                                     />
@@ -85,13 +90,13 @@ export default function Product_Card({ id, name, price, images }: IProductCardPr
             <div className='mt-4 flex flex-col items-start gap-1'>
                 <Link
                     href={`/products/${id}`}
-                    className='text-sm font-medium text-zinc-700 dark:text-zinc-200 
+                    className='lg:text-sm 2xl:text-[16px] font-medium text-zinc-700 dark:text-zinc-200 
                     group-hover:text-zinc-950 dark:group-hover:text-zinc-100'
                 >
                     {name}
                 </Link>
                 <p
-                    className='text-sm font-medium text-zinc-700 dark:text-zinc-200 
+                    className='lg:text-sm 2xl:text-[16px] font-medium text-zinc-700 dark:text-zinc-200 
                     hover:text-zinc-950 dark:hover:text-zinc-100'
                 >
                     {formatPrice(price)}
@@ -99,7 +104,7 @@ export default function Product_Card({ id, name, price, images }: IProductCardPr
             </div>
 
             <div
-                className='absolute bottom-24 left-0 right-0 flex gap-2 translate-y-full px-3
+                className='absolute bottom-24 2xl:bottom-[85px] left-0 right-0 flex gap-2 translate-y-full px-3
                 opacity-0 transition-all duration-200 group-hover:translate-y-2 group-hover:opacity-100'
             >
                 <Button

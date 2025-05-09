@@ -24,5 +24,5 @@ setupRoutes(app);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     connectDatabase();
-    console.log(`\n-----> Server is running on port:${PORT}`);
+    console.log(`\n✅ Server is running on port:${PORT}`);
 });

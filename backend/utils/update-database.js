@@ -1,7 +1,9 @@
+import puppeteer from 'puppeteer';
 import dotenv from 'dotenv';
 import connectDatabase from '../database/connect_Database.js';
 import ProductModel from '../models/product.model.js';
 import mongoose from 'mongoose';
+import { Automatic_Link_Timex, Stainless_Steel_Link_Timex } from './link-timex.js';
 
 dotenv.config();
 
@@ -75,6 +77,67 @@ const updateProductGender = async () => {
     }
 };
 
+const runUpdateImages = async () => {
+    await connectDatabase();
+    const products = await ProductModel.find();
+    const browser = await puppeteer.launch({ headless: 'new' });
+    const page = await browser.newPage();
+
+    for (const link of Automatic_Link_Timex) {
+        await page.goto(link, { waitUntil: 'networkidle2' });
+
+        const productName = await page.evaluate(() => {
+            return document.querySelector('h1.product-details__panel-title')?.textContent?.trim();
+        });
+
+        if (!productName) {
+            console.log(`❌ Không lấy được tên sản phẩm ở link: ${link}`);
+            continue;
+        }
+
+        const product = products.find((p) => p.name.toLowerCase() === productName.toLowerCase());
+
+        if (!product) {
+            console.log(`❌ Không tìm thấy sản phẩm cho name: ${productName}`);
+            continue;
+        }
+
+        const images = await page.evaluate(() => {
+            const thumbnailEl = document.querySelector('.product-details__bg-desktop img');
+            const subImageEl = document.querySelector(
+                '.product-gallery__featured-image-container img'
+            );
+
+            const thumbnail = thumbnailEl ? 'https:' + thumbnailEl.getAttribute('src') : null;
+            const subImage = subImageEl ? 'https:' + subImageEl.getAttribute('src') : null;
+
+            return { thumbnail, subImage };
+        });
+
+        if (!images.thumbnail && !images.subImage) {
+            console.log(`❌ Không tìm thấy ảnh cho sản phẩm: ${productName}`);
+            continue;
+        }
+
+        await ProductModel.findByIdAndUpdate(
+            { name: product.name },
+            {
+                $set: {
+                    thumbnail: images.thumbnail,
+                    sub_image: images.subImage,
+                },
+            }
+        );
+
+        console.log(`✅ Updated images cho: ${product.name}`);
+    }
+
+    await browser.close();
+    mongoose.disconnect();
+    console.log('🔥 Done update images!');
+};
+
 // updateProductRatings();
 // updateDefaultVariantId();
 // updateProductGender();
+runUpdateImages();

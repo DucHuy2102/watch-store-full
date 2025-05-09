@@ -621,7 +621,7 @@ export const Silver_Link_Timex = [
     'https://timex.com/products/easy-reader-25mm-bracelet-watch-t2h491',
 ];
 
-export const Digital_Female_Link_Timex = [
+export const Digital_Women_Link_Timex = [
     'https://timex.com/products/timex-t80-steel-36mm-stainless-steel-bracelet-watch-tw2w91600',
     'https://timex.com/products/timex-x-peanuts-t80-75th-anniversary-edition-34mm-stainless-steel-bracelet-watch-tw2y20000',
     'https://timex.com/products/timex-t80-34mm-stainless-steel-expansion-band-watch-tw2w68100',

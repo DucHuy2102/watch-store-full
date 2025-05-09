@@ -127,7 +127,7 @@ export const getProductById = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid product ID' });
         }
 
-        const product = await ProductModel.findById(id).populate('brandId', 'name');
+        const product = await ProductModel.findById(id);
 
         if (!product) {
             return res.status(404).json({ success: false, message: 'Product not found !!!' });
