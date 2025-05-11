@@ -8,6 +8,7 @@ export { default as Product_Empty } from './Product_Empty';
 export { default as Product_Filter } from './Product_Filter';
 export { default as Product_Grid } from './Product_Grid';
 export { default as Product_Pagination } from './Product_Pagination';
+export { default as Product_Related } from './Product_Related';
 export { default as Product_Sort_Filter } from './Product_Sort_Filter';
 export { default as Product_Sort } from './Product_Sort';
 export { default as Size_Guide } from './Size_Guide';

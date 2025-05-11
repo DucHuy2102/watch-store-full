@@ -145,3 +145,30 @@ export const getProductById = async (req, res) => {
         });
     }
 };
+
+// get related products
+export const getRelatedProducts = async (req, res) => {
+    try {
+        const { watchStyle } = req.query;
+        const products = await ProductModel.find({
+            watchStyle: watchStyle ?? 'Automatic',
+        });
+
+        if (!products) {
+            return res
+                .status(404)
+                .json({ success: false, message: 'Do not have related products !!!' });
+        }
+
+        res.status(200).json({
+            success: true,
+            products,
+        });
+    } catch (error) {
+        console.log('Error in getRelatedProducts controller', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error in getRelatedProducts controller',
+        });
+    }
+};

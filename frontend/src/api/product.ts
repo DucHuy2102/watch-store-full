@@ -9,3 +9,8 @@ export const getProductById = async (id: string) => {
     const res = await axiosClient.get(`/products/${id}`);
     return res.data;
 };
+
+export const getRelatedProducts = async (watchStyle: string) => {
+    const res = await axiosClient.get(`/products/products-related?watchStyle=${watchStyle}`);
+    return res.data;
+};

@@ -4,19 +4,18 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from '@/components/ui/carousel';
-import { FiMinus, FiPlus, FiShoppingCart, FiHeart, FiShuffle } from 'react-icons/fi';
+import { FiShoppingCart, FiHeart } from 'react-icons/fi';
 import { MdCompareArrows } from 'react-icons/md';
 import { Badge } from '@/components/ui/badge';
 import { IProduct } from '@/lib/redux/interfaces/product.interface';
-import { getProductById } from '@/api/product';
-import { Infomation_Section, Loading_Skeleton, Product_Empty, Size_Guide } from '../components';
+import { getProductById, getRelatedProducts } from '@/api/product';
+import {
+    Infomation_Section,
+    Loading_Skeleton,
+    Product_Empty,
+    Product_Related,
+    Size_Guide,
+} from '../components';
 import { ChevronDownIcon } from 'lucide-react';
 
 type ButtonItemProps = {
@@ -45,15 +44,16 @@ export const ButtonItem = ({ title, isOpen, onToggle, rightElement }: ButtonItem
 type SpecificationItemProps = {
     label: string;
     value: string | number;
+    unit?: string;
 };
 
-export const SpecificationItem = ({ label, value }: SpecificationItemProps) => {
+export const SpecificationItem = ({ label, value, unit }: SpecificationItemProps) => {
     return (
         <div className='py-2'>
             <div className='flex'>
                 <span className='font-medium text-sm'>{label}:</span>
                 <span className='ml-1 font-medium text-sm text-zinc-700 dark:text-zinc-300'>
-                    {value} {typeof value === 'number' ? 'mm' : ''}
+                    {value} {unit ?? ''}
                 </span>
             </div>
         </div>
@@ -75,6 +75,7 @@ const formatPrice = (price: number) => {
 export default function ProductDetail() {
     const { id } = useParams();
     const [product, setProduct] = useState<IProduct | null>(null);
+    const [relatedProducts, setRelatedProducts] = useState<IProduct[]>([]);
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
@@ -104,6 +105,21 @@ export default function ProductDetail() {
 
         getProduct();
     }, [id]);
+
+    useEffect(() => {
+        const getRelated_Products = async () => {
+            try {
+                if (product) {
+                    const res = await getRelatedProducts(product.watchStyle);
+                    setRelatedProducts(res?.products);
+                }
+            } catch (error) {
+                console.error('Error fetching related products:', error);
+            }
+        };
+
+        if (product) getRelated_Products();
+    }, [product]);
 
     const handleLikeClick = () => {
         setIsLiked(!isLiked);
@@ -236,6 +252,7 @@ export default function ProductDetail() {
                                                 product.specifications.waterResistance ||
                                                 '50 meters'
                                             }
+                                            unit='meters'
                                         />
                                         <SpecificationItem
                                             label='Crystal / Lens'
@@ -245,11 +262,13 @@ export default function ProductDetail() {
                                         <SpecificationItem
                                             label='Case Diameter'
                                             value={product.specifications.caseDiameter}
+                                            unit='mm'
                                         />
 
                                         <SpecificationItem
                                             label='Case Height'
                                             value={product.specifications.caseHeight}
+                                            unit='mm'
                                         />
                                         <SpecificationItem
                                             label='Case Material'
@@ -286,6 +305,7 @@ export default function ProductDetail() {
                                         <SpecificationItem
                                             label='Strap / Lug Width'
                                             value={product.specifications.strapLugWidth}
+                                            unit='mm'
                                         />
                                         <SpecificationItem
                                             label='Strap Material'
@@ -368,6 +388,7 @@ export default function ProductDetail() {
             <Infomation_Section />
 
             {/* related products */}
+            <Product_Related products={relatedProducts} />
 
             {/* comments section */}
         </div>
