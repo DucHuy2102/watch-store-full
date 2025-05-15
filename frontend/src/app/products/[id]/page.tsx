@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { IProduct } from '@/lib/redux/interfaces/product.interface';
 import { getProductById, getRelatedProducts } from '@/api/product';
 import {
+    Images_Section,
     Infomation_Section,
     Loading_Skeleton,
     Product_Empty,
@@ -204,9 +205,14 @@ export default function ProductDetail() {
             </div>
 
             {/* images section */}
+            <Images_Section
+                product={product}
+                activeImageIndex={activeImageIndex}
+                setActiveImageIndex={setActiveImageIndex}
+            />
 
             {/* description & specification section */}
-            <div className='flex items-start justify-center gap-10 w-full py-10 px-16'>
+            <div className='flex items-start justify-center gap-10 w-full pb-10 px-16'>
                 {/* description */}
                 <div className='w-2/3'>
                     <div className='py-6 flex flex-col items-start gap-3'>
@@ -391,6 +397,7 @@ export default function ProductDetail() {
             <Product_Related products={relatedProducts} />
 
             {/* comments section */}
+            <div>Comments Section</div>
         </div>
     );
 }

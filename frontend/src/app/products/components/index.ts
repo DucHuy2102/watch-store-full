@@ -1,6 +1,6 @@
 export { default as Loading_ProductGrid } from './Loading_ProductGrid';
 export { default as Loading_Skeleton } from './Loading_Skeleton';
-
+export { default as Images_Section } from './Images';
 export { default as Infomation_Section } from './Information';
 export { default as Product_Breadcrumb } from './Product_Breadcrumb';
 export { default as Product_Card } from './Product_Card';
