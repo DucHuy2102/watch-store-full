@@ -12,3 +12,4 @@ export { default as Product_Related } from './Product_Related';
 export { default as Product_Sort_Filter } from './Product_Sort_Filter';
 export { default as Product_Sort } from './Product_Sort';
 export { default as Size_Guide } from './Size_Guide';
+export { default as Comments_Section } from './Comments';

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import connectDatabase from '../database/connect_Database.js';
 import ProductModel from '../models/product.model.js';
 import mongoose from 'mongoose';
-import { Automatic_Link_Timex, Stainless_Steel_Link_Timex } from './link-timex.js';
+import { Automatic_Link_Timex } from './link-timex.js';
 
 dotenv.config();
 
@@ -137,7 +137,41 @@ const runUpdateImages = async () => {
     console.log('🔥 Done update images!');
 };
 
+const createProductIndexes = async () => {
+    try {
+        await connectDatabase();
+
+        // Text index cho search
+        await ProductModel.collection.createIndex({ name: 'text', description: 'text' });
+
+        // Index các field query nhiều
+        await ProductModel.collection.createIndex({ watchStyle: 1 });
+        await ProductModel.collection.createIndex({ 'variant.stock': 1 });
+        await ProductModel.collection.createIndex({ gender: 1 });
+        await ProductModel.collection.createIndex({ 'specifications.movementType': 1 });
+        await ProductModel.collection.createIndex({ 'specifications.caseDiameter': 1 });
+        await ProductModel.collection.createIndex({ 'specifications.strapLugWidth': 1 });
+        await ProductModel.collection.createIndex({ 'specifications.strapMaterial': 1 });
+        await ProductModel.collection.createIndex({ 'specifications.waterResistance': 1 });
+        await ProductModel.collection.createIndex({ 'specifications.crystalLens': 1 });
+
+        // Sort thường xuyên
+        await ProductModel.collection.createIndex({ createdAt: -1 });
+
+        // Nếu có price thì thêm luôn
+        await ProductModel.collection.createIndex({ price: 1 });
+
+        console.log('✅ Đã tạo index cho Product collection.\n');
+        process.exit(0);
+    } catch (error) {
+        console.error('❌ Error updating gender:', error);
+    } finally {
+        mongoose.disconnect();
+    }
+};
+
 // updateProductRatings();
 // updateDefaultVariantId();
 // updateProductGender();
-runUpdateImages();
+// runUpdateImages();
+createProductIndexes();

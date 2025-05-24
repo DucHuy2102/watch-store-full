@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { IProduct } from '@/lib/redux/interfaces/product.interface';
 import { getProductById, getRelatedProducts } from '@/api/product';
 import {
+    Comments_Section,
     Images_Section,
     Infomation_Section,
     Loading_Skeleton,
@@ -397,7 +398,7 @@ export default function ProductDetail() {
             <Product_Related products={relatedProducts} />
 
             {/* comments section */}
-            <div>Comments Section</div>
+            <Comments_Section productId={product._id} />
         </div>
     );
 }

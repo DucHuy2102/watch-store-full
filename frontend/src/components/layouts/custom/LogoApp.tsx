@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-const logoTextVariants = cva('tracking-wider text-2xl font-bold flex items-center', {
+const logoTextVariants = cva('tracking-wider text-3xl font-bold flex items-center', {
     variants: {
         variant: {
             default: 'text-slate-600 hover:text-slate-800 dark:text-slate-100',

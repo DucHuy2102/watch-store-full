@@ -12,9 +12,12 @@ import { getAllProducts } from '@/api/product';
 import { IProduct } from '@/lib/redux/interfaces/product.interface';
 import { useSearchParams } from 'next/navigation';
 
+const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
 export default function Products() {
     const searchParams = useSearchParams();
     const [products, setProducts] = useState<IProduct[]>([]);
+    const [searchProduct, setSearchProduct] = useState('');
     const [sort, setSort] = useState('');
     const [filters, setFilters] = useState<Record<string, string>>({
         gender: '',
@@ -36,6 +39,9 @@ export default function Products() {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        const searchValue = searchParams.get('search') || '';
+        setSearchProduct(searchValue);
+
         const newFilters: Record<string, string> = { ...filters };
         Object.keys(newFilters).forEach((key) => {
             newFilters[key] = searchParams.get(key) || '';
@@ -56,6 +62,8 @@ export default function Products() {
             try {
                 setIsLoading(true);
                 const queryParams = new URLSearchParams();
+
+                if (searchValue) queryParams.append('search', capitalize(searchValue));
 
                 if (sortValue) queryParams.append('sort', sortValue);
                 if (styleValue) queryParams.set('style', styleValue);
@@ -123,7 +131,7 @@ export default function Products() {
 
     return (
         <div
-            className='flex flex-col min-h-screen w-full overflow-hidden 
+            className='flex flex-col justify-center items-center min-h-screen w-full overflow-hidden 
                 px-5 md:px-10 py-1 md:py-3'
         >
             {/* sort and filter */}

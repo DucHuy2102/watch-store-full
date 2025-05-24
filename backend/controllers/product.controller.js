@@ -1,6 +1,7 @@
 import ProductModel from '../models/product.model.js';
 import sortProduct from '../utils/sortProduct.js';
 import mongoose from 'mongoose';
+import redis from '../utils/redis.js';
 
 // get all products
 export const getAllProducts = async (req, res) => {
@@ -24,16 +25,15 @@ export const getAllProducts = async (req, res) => {
         const filterQuery = {};
 
         if (search) {
-            filterQuery.$or = [
-                { name: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } },
-            ];
+            filterQuery.$text = { $search: search };
         }
 
         const conditions = [];
+
         if (style) {
             conditions.push({ watchStyle: { $regex: style, $options: 'i' } });
         }
+
         if (stockStatus) {
             const statuses = stockStatus.split(',');
             const stockConditions = statuses
@@ -47,15 +47,20 @@ export const getAllProducts = async (req, res) => {
                 conditions.push({ $or: stockConditions });
             }
         }
+
         if (gender) {
             if (gender === 'Men' || gender === 'Women') {
-                conditions.push({ gender: gender });
+                conditions.push({ gender });
             } else {
                 conditions.push({ gender: 'Kid' });
             }
         }
+
         if (movementType)
-            conditions.push({ 'specifications.movementType': { $in: movementType.split(',') } });
+            conditions.push({
+                'specifications.movementType': { $in: movementType.split(',') },
+            });
+
         if (caseDiameter) {
             const diameters = caseDiameter.split(',');
             const diameterConditions = diameters.map((range) => {
@@ -71,15 +76,24 @@ export const getAllProducts = async (req, res) => {
         }
 
         if (strapLugWidth)
-            conditions.push({ 'specifications.strapLugWidth': { $in: strapLugWidth.split(',') } });
+            conditions.push({
+                'specifications.strapLugWidth': { $in: strapLugWidth.split(',') },
+            });
+
         if (strapMaterial)
-            conditions.push({ 'specifications.strapMaterial': { $in: strapMaterial.split(',') } });
+            conditions.push({
+                'specifications.strapMaterial': { $in: strapMaterial.split(',') },
+            });
+
         if (waterResistance)
             conditions.push({
                 'specifications.waterResistance': { $in: waterResistance.split(',') },
             });
+
         if (crystalLens)
-            conditions.push({ 'specifications.crystalLens': { $in: crystalLens.split(',') } });
+            conditions.push({
+                'specifications.crystalLens': { $in: crystalLens.split(',') },
+            });
 
         if (conditions.length > 0) {
             filterQuery.$and = conditions;
@@ -88,6 +102,7 @@ export const getAllProducts = async (req, res) => {
         const pageNum = parseInt(page, 10) || 1;
         const limitNum = parseInt(limit, 10) || 18;
         const skip = (pageNum - 1) * limitNum;
+
         const totalProducts = await ProductModel.countDocuments(filterQuery);
 
         const { sortField, sortOrder } = sortProduct(sort);
@@ -97,9 +112,10 @@ export const getAllProducts = async (req, res) => {
             .limit(limitNum);
 
         if (!products) {
-            return res
-                .status(404)
-                .json({ success: false, message: 'Do not have products in database !!!' });
+            return res.status(404).json({
+                success: false,
+                message: 'Do not have products in database !!!',
+            });
         }
 
         res.status(200).json({
@@ -169,6 +185,61 @@ export const getRelatedProducts = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error in getRelatedProducts controller',
+        });
+    }
+};
+
+// get search suggestions
+export const getSearchSuggestions = async (req, res) => {
+    try {
+        const { query } = req.query;
+        if (!query) {
+            return res.status(400).json({ success: false, message: 'Missing query param' });
+        }
+
+        const cacheKey = `search:${query}`;
+        const cachedSuggestions = await redis.get(cacheKey);
+        if (cachedSuggestions) {
+            return res.status(200).json({
+                success: true,
+                suggestions: JSON.parse(cachedSuggestions),
+                cached: true,
+            });
+        }
+
+        const suggestions = await ProductModel.find({
+            name: { $regex: query, $options: 'i' },
+        }).select('name');
+
+        const uniqueResults = [];
+        const seenNames = new Set();
+
+        for (const prod of suggestions) {
+            if (!seenNames.has(prod.name)) {
+                uniqueResults.push(prod);
+                seenNames.add(prod.name);
+            }
+        }
+
+        if (!uniqueResults.length) {
+            return res.status(404).json({
+                success: false,
+                message: 'Do not have search suggestions !!!',
+            });
+        }
+
+        await redis.set(cacheKey, JSON.stringify(uniqueResults), 'EX', 300);
+
+        res.status(200).json({
+            success: true,
+            suggestions: uniqueResults,
+            cached: false,
+        });
+    } catch (error) {
+        console.log('Error in getSearchSuggestions controller', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error in getSearchSuggestions controller',
         });
     }
 };
