@@ -1,8 +1,8 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { Footer, Navbar } from '@/components/layouts';
-import { usePathname } from 'next/navigation';
+import {ReactNode} from 'react';
+import {Footer, Navbar} from '@/components/layouts';
+import {usePathname} from 'next/navigation';
 
 const hideLayout = [
     '/auth/login',
@@ -12,7 +12,7 @@ const hideLayout = [
     '/auth/reset-password/:code',
 ];
 
-export default function LayoutWrapper({ children }: { children: ReactNode }) {
+export default function LayoutWrapper({children}: { children: ReactNode }) {
     const pathname = usePathname();
 
     const shouldHideLayout = hideLayout.some((route) => {
@@ -23,9 +23,9 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
 
     return (
         <>
-            {!shouldHideLayout && <Navbar />}
+            {!shouldHideLayout && <Navbar/>}
             {children}
-            {!shouldHideLayout && <Footer />}
+            {!shouldHideLayout && <Footer/>}
         </>
     );
 }
