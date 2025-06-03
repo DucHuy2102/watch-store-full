@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin 'tailwindcss-animate';
@@ -132,4 +133,8 @@
     .bg-sign-up {
         background-image: url('/register.webp');
     }
+}
+
+.font-indie {
+    font-family: 'Indie Flower', cursive;
 }
