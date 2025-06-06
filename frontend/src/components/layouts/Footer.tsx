@@ -7,23 +7,25 @@ import { Input } from '../ui/input';
 import LogoApp from './custom/LogoApp';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 const GITHUB_LINK = process.env.NEXT_PUBLIC_GITHUB_LINK;
 const FACEBOOK_LINK = process.env.NEXT_PUBLIC_FACEBOOK_LINK;
 
 export default function Footer() {
+    const { theme } = useTheme();
     const [isHiddenURL, setIsHiddenURL] = useState(false);
     const pathName = usePathname();
     useEffect(() => {
         const isProductDetail = /^\/products\/[^/]+$/.test(pathName);
-        setIsHiddenURL(!isProductDetail);
+        setIsHiddenURL(isProductDetail);
     }, [pathName]);
 
     return (
         <footer
-            className={`px-10 py-8 md:px-20 bg-zinc-950 mt-auto ${
-                isHiddenURL ? 'rounded-tl-[100px]' : 'rounded-tl-none'
-            }`}
+            className={`px-10 py-8 md:px-20 bg-zinc-950 mt-auto
+                ${theme === 'dark' ? 'border-t-4 border-emerald-600/80' : 'border-none'}
+                ${isHiddenURL ? 'rounded-tl-none' : 'rounded-tl-[100px]'}`}
         >
             <div className='max-w-7xl mx-auto'>
                 <div className='grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-zinc-800'>

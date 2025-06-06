@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import { useRef } from 'react';
 import { Provider } from 'react-redux';
-import { makeStore, AppStore } from '../redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from '../redux/store';
 import { ToastContainer } from 'react-toastify';
 
 export function ThemeProvider({
@@ -16,15 +16,14 @@ export function ThemeProvider({
         setMounted(true);
     }, []);
 
-    const storeRef = useRef<AppStore>(undefined);
-    if (!storeRef.current) {
-        storeRef.current = makeStore();
-    }
-
     if (!mounted) return null;
     return (
         <NextThemesProvider {...props}>
-            <Provider store={storeRef.current}>{children}</Provider>
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    {children}
+                </PersistGate>
+            </Provider>
             <ToastContainer
                 position='bottom-right'
                 autoClose={3000}
